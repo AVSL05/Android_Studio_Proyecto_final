@@ -8,6 +8,7 @@
     android:padding="24dp"
     tools:context=".MainActivity">
 
+    <!-- Texto de bienvenida -->
     <TextView
         android:id="@+id/tvWelcome"
         android:layout_width="wrap_content"
@@ -22,6 +23,7 @@
         app:layout_constraintBottom_toTopOf="@+id/tvDescription"
         android:layout_marginTop="100dp" />
 
+    <!-- Descripción -->
     <TextView
         android:id="@+id/tvDescription"
         android:layout_width="wrap_content"
@@ -34,6 +36,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvWelcome" />
 
+    <!-- Botón de cerrar sesión -->
     <Button
         android:id="@+id/btnLogout"
         android:layout_width="wrap_content"

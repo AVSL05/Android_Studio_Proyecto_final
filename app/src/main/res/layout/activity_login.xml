@@ -7,6 +7,7 @@
     android:gravity="center"
     android:background="@color/white">
 
+    <!-- Título de iniciar Sesión -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,12 +17,14 @@
         android:textColor="@color/black"
         android:layout_marginBottom="48dp" />
 
+    <!-- Apartado de correo electrónico -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
+        <!-- EditText para correo electrónico -->
         <EditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
@@ -31,13 +34,16 @@
             android:padding="16dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
+    <!-- Fin de apartado de correo electrónico -->
 
+    <!-- Apartado de contraseña -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
+        <!-- EditText para contraseña -->
         <EditText
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
@@ -47,7 +53,9 @@
             android:padding="16dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
+    <!-- Fin de apartado de contraseña -->
 
+    <!-- Botón de iniciar sesión -->
     <Button
         android:id="@+id/btnLogin"
         android:layout_width="match_parent"
@@ -58,6 +66,7 @@
         android:layout_marginBottom="16dp"
         android:padding="16dp" />
 
+    <!-- Texto para redirigir a registro -->
     <TextView
         android:id="@+id/tvRegister"
         android:layout_width="wrap_content"

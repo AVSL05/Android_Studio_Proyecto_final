@@ -7,6 +7,7 @@
     android:gravity="center"
     android:background="@color/white">
 
+    <!-- Título de Registro -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,12 +17,14 @@
         android:textColor="@color/black"
         android:layout_marginBottom="48dp" />
 
+    <!-- Apartado de nombre completo -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
+        <!-- EditText para nombre completo -->
         <EditText
             android:id="@+id/etName"
             android:layout_width="match_parent"
@@ -31,13 +34,16 @@
             android:padding="16dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
+    <!-- Fin de apartado de nombre completo -->
 
+    <!-- Apartado de correo electrónico -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
+        <!-- EditText para correo electrónico -->
         <EditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
@@ -47,13 +53,16 @@
             android:padding="16dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
+    <!-- Fin de apartado de correo electrónico -->
 
+    <!-- Apartado de contraseña -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
+        <!-- EditText para contraseña -->
         <EditText
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
@@ -63,13 +72,16 @@
             android:padding="16dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
+    <!-- Fin de apartado de contraseña -->
 
+    <!-- Apartado de confirmar contraseña -->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
+        <!-- EditText para confirmar contraseña -->
         <EditText
             android:id="@+id/etConfirmPassword"
             android:layout_width="match_parent"
@@ -79,7 +91,9 @@
             android:padding="16dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
+    <!-- Fin de apartado de confirmar contraseña -->
 
+    <!-- Botón de registrarse -->
     <Button
         android:id="@+id/btnRegister"
         android:layout_width="match_parent"
@@ -90,6 +104,7 @@
         android:layout_marginBottom="16dp"
         android:padding="16dp" />
 
+    <!-- Texto para redirigir a iniciar sesión -->
     <TextView
         android:id="@+id/tvLogin"
         android:layout_width="wrap_content"

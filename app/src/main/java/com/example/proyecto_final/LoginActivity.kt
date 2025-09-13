@@ -40,6 +40,7 @@ class LoginActivity : AppCompatActivity() {
         setupClickListeners()
     }
 
+    // Inicializar vistas
     private fun initViews() {
         etEmail = findViewById(R.id.etEmail)
         etPassword = findViewById(R.id.etPassword)
@@ -47,11 +48,12 @@ class LoginActivity : AppCompatActivity() {
         tvRegister = findViewById(R.id.tvRegister)
     }
 
+    // Configurar listeners de clic
     private fun setupClickListeners() {
         btnLogin.setOnClickListener {
             performLogin()
         }
-
+    // Navegar hasta la actividad de registro
         tvRegister.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }

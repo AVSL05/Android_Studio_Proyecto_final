@@ -10,6 +10,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.proyecto_final.utils.SessionManager
 
+// Actividad principal que muestra información del usuario y permite cerrar sesión
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var sessionManager: SessionManager
@@ -37,12 +39,14 @@ class MainActivity : AppCompatActivity() {
         setupLogoutButton()
     }
 
+    // Configurar la información del usuario en la interfaz
     private fun setupUserInfo() {
         val tvWelcome = findViewById<TextView>(R.id.tvWelcome)
         val userName = sessionManager.getUserName()
         tvWelcome.text = "¡Bienvenido ${userName ?: "Usuario"}!"
     }
 
+    // Configurar el botón de cerrar sesión
     private fun setupLogoutButton() {
         val btnLogout = findViewById<Button>(R.id.btnLogout)
         btnLogout.setOnClickListener {
