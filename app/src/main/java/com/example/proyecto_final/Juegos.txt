@@ -3,7 +3,7 @@ pondre los juegos por categoria y las repartimos:
 Cartas:
 21,Solitario
 Clasicos:
-Snake, Buscaminas
+Snake, Buscaminas (Quisiera hacer el snake y buscaminas=
 80´s:
 Tetris, pacman
 Juegos de agilidad mental:
