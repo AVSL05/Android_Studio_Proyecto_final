@@ -31,7 +31,8 @@
             android:layout_height="wrap_content"
             android:hint="Correo electrónico"
             android:inputType="textEmailAddress"
-            android:padding="16dp" />
+            android:padding="16dp"
+            android:maxLength="35" />
 
     </com.google.android.material.textfield.TextInputLayout>
     <!-- Fin de apartado de correo electrónico -->
@@ -50,7 +51,8 @@
             android:layout_height="wrap_content"
             android:hint="Contraseña"
             android:inputType="textPassword"
-            android:padding="16dp" />
+            android:padding="16dp"
+            android:maxLength="35" />
 
     </com.google.android.material.textfield.TextInputLayout>
     <!-- Fin de apartado de contraseña -->

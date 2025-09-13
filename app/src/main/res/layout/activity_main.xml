@@ -13,7 +13,7 @@
         android:id="@+id/tvWelcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="¡Bienvenido a la App!"
+        android:text="Bienvenido a la App"
         android:textSize="28sp"
         android:textStyle="bold"
         android:textColor="@color/black"

@@ -31,7 +31,8 @@
             android:layout_height="wrap_content"
             android:hint="Nombre completo"
             android:inputType="textPersonName"
-            android:padding="16dp" />
+            android:padding="16dp"
+            android:maxLength="35" />
 
     </com.google.android.material.textfield.TextInputLayout>
     <!-- Fin de apartado de nombre completo -->
@@ -50,7 +51,8 @@
             android:layout_height="wrap_content"
             android:hint="Correo electrónico"
             android:inputType="textEmailAddress"
-            android:padding="16dp" />
+            android:padding="16dp"
+            android:maxLength="35" />
 
     </com.google.android.material.textfield.TextInputLayout>
     <!-- Fin de apartado de correo electrónico -->
@@ -69,7 +71,8 @@
             android:layout_height="wrap_content"
             android:hint="Contraseña"
             android:inputType="textPassword"
-            android:padding="16dp" />
+            android:padding="16dp"
+            android:maxLength="35" />
 
     </com.google.android.material.textfield.TextInputLayout>
     <!-- Fin de apartado de contraseña -->
@@ -88,7 +91,8 @@
             android:layout_height="wrap_content"
             android:hint="Confirmar contraseña"
             android:inputType="textPassword"
-            android:padding="16dp" />
+            android:padding="16dp"
+            android:maxLength="35" />
 
     </com.google.android.material.textfield.TextInputLayout>
     <!-- Fin de apartado de confirmar contraseña -->

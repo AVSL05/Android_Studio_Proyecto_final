@@ -84,8 +84,18 @@ class RegisterActivity : AppCompatActivity() {
             return false
         }
 
+        if (name.length > 35) {
+            etName.error = "El nombre no puede tener más de 35 caracteres"
+            return false
+        }
+
         if (email.isEmpty()) {
             etEmail.error = "El email es requerido"
+            return false
+        }
+
+        if (email.length > 35) {
+            etEmail.error = "El email no puede tener más de 35 caracteres"
             return false
         }
 
@@ -104,8 +114,18 @@ class RegisterActivity : AppCompatActivity() {
             return false
         }
 
+        if (password.length > 35) {
+            etPassword.error = "La contraseña no puede tener más de 35 caracteres"
+            return false
+        }
+
         if (confirmPassword.isEmpty()) {
             etConfirmPassword.error = "Confirma tu contraseña"
+            return false
+        }
+
+        if (confirmPassword.length > 35) {
+            etConfirmPassword.error = "La confirmación no puede tener más de 35 caracteres"
             return false
         }
 

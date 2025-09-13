@@ -88,6 +88,11 @@ class LoginActivity : AppCompatActivity() {
             return false
         }
 
+        if (email.length > 35) {
+            etEmail.error = "El email no puede tener más de 35 caracteres"
+            return false
+        }
+
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             etEmail.error = "Email inválido"
             return false
@@ -100,6 +105,11 @@ class LoginActivity : AppCompatActivity() {
 
         if (password.length < 6) {
             etPassword.error = "La contraseña debe tener al menos 6 caracteres"
+            return false
+        }
+
+        if (password.length > 35) {
+            etPassword.error = "La contraseña no puede tener más de 35 caracteres"
             return false
         }
 
