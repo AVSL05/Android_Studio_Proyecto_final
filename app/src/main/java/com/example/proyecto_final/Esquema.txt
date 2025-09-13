@@ -1,0 +1,13 @@
+Primero tenemos que hacer ciertas cosas antes de los juegos:
+1- Hacer un login y registro de usuarios
+2- Pantalla home donde se separaran los juegos por categorias en casillas como se ve en las imagenes
+
+
+Adiciones al punto 2:
+Hagamos una pantalla de perfil donde se pueda ver el puntaje mas alto de cada juego y un boton para cerrar sesion
+y se pueda añadir tus juegos favoritos en una categoria aprte y que este con por ejemplo una estrella 🌟,
+por defecto esta pantalla de favoritos esta vacia
+
+Modelo de trabajo:
+Hacen su pull request de sus juegos y yo lo integrare al repositorio desde github.
+Haremos la pantalla de inicio todos en conjunto en clase pero si quieren irle avanzand a un juego esta bien

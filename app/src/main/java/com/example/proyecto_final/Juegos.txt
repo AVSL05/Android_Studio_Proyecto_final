@@ -1,0 +1,12 @@
+A ver hay que elegir quien hace que juego hacemos cada uno
+pondre los juegos por categoria y las repartimos:
+Cartas:
+21,Solitario
+Clasicos:
+Snake, Buscaminas
+80´s:
+Tetris, pacman
+Juegos de agilidad mental:
+Memorama, Sudoku
+Juegos extras que estaria chido poner:
+Francotirador, pingpong( en vez de tenis),Breakout
