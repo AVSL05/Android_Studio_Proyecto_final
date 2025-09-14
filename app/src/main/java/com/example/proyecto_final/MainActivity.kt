@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.proyecto_final.Juegos.Snake
 import com.example.proyecto_final.utils.SessionManager
 
 // Actividad principal que muestra información del usuario y permite cerrar sesión
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         // Configurar el botón para ir al juego Snake
         val btnSnake = findViewById<Button>(R.id.btnSnake)
         btnSnake.setOnClickListener {
-            val intent = Intent(this, com.example.proyecto_final.juegos.Snake::class.java)
+            val intent = Intent(this, Snake::class.java)
             startActivity(intent)
         }
     }

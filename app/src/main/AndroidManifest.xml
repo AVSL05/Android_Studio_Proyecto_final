@@ -30,7 +30,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".juegos.Snake"
+            android:name=".Juegos.Snake"
             android:exported="false" />
 
     </application>
