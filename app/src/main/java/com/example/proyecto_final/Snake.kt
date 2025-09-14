@@ -3,13 +3,14 @@ package com.example.proyecto_final.juegos
 import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
-import android.widget.Toast
+import com.example.proyecto_final.R
 import java.util.*
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -36,7 +37,7 @@ class Snake : Activity() {
         val snake = ImageView(this)
         val snakeSegments =
             mutableListOf(snake) // Keep track of the position of each snake segment
-        val handler = Handler()
+        val handler = Handler(Looper.getMainLooper())
         var delayMillis = 30L // Update snake position every 100 milliseconds
         var currentDirection = "right" // Start moving right by default
         var scorex = 0

@@ -37,6 +37,13 @@ class MainActivity : AppCompatActivity() {
 
         setupUserInfo()
         setupLogoutButton()
+
+        // Configurar el botón para ir al juego Snake
+        val btnSnake = findViewById<Button>(R.id.btnSnake)
+        btnSnake.setOnClickListener {
+            val intent = Intent(this, com.example.proyecto_final.juegos.Snake::class.java)
+            startActivity(intent)
+        }
     }
 
     // Configurar la información del usuario en la interfaz

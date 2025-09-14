@@ -29,6 +29,10 @@
             android:name=".MainActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".juegos.Snake"
+            android:exported="false" />
+
     </application>
 
 </manifest>

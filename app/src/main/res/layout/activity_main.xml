@@ -47,4 +47,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Botón para ir al juego Snake -->
+    <Button
+        android:id="@+id/btnSnake"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Jugar Snake"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvDescription"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
