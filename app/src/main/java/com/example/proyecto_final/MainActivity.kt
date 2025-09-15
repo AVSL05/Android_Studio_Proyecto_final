@@ -1,9 +1,12 @@
 package com.example.proyecto_final
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import android.widget.VideoView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -39,15 +42,28 @@ class MainActivity : AppCompatActivity() {
         setupUserInfo()
         setupLogoutButton()
 
-        // Configurar el botón para ir al juego Snake
-        val btnSnake = findViewById<Button>(R.id.btnSnake)
-        btnSnake.setOnClickListener {
+        // Configurar el VideoView como botón interactivo
+        val videoButton = findViewById<VideoView>(R.id.videoButton)
+        val btnPlaySnake = findViewById<Button>(R.id.btnPlaySnake)
+        val videoUri = Uri.parse("android.resource://" + packageName + "/" + R.raw.prueba_para_juego)
+        videoButton.setVideoURI(videoUri)
+        videoButton.setOnPreparedListener { mp ->
+            mp.isLooping = true // Bucle infinito
+            videoButton.seekTo(1) // Mostrar el primer frame como preview para que no se mire en negro
+        }
+        videoButton.setOnClickListener {
+            // Al hacer clic, reproducir el video en bucle y mostrar el botón 'Jugar'
+            if (!videoButton.isPlaying) {
+                videoButton.start()
+            }
+            btnPlaySnake.visibility = View.VISIBLE
+        }
+        btnPlaySnake.setOnClickListener {
             val intent = Intent(this, Snake::class.java)
             startActivity(intent)
         }
     }
 
-    // Configurar la información del usuario en la interfaz
     private fun setupUserInfo() {
         val tvWelcome = findViewById<TextView>(R.id.tvWelcome)
         val userName = sessionManager.getUserName()

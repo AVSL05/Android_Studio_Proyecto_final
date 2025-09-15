@@ -47,15 +47,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Botón para ir al juego Snake -->
+    <!-- VideoView para mostrar un video -->
+    <VideoView
+        android:id="@+id/videoButton"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvDescription"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.2" />
+
+    <!-- Botón para iniciar el juego, inicialmente invisible -->
     <Button
-        android:id="@+id/btnSnake"
+        android:id="@+id/btnPlaySnake"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Jugar Snake"
-        android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@+id/tvDescription"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/videoButton"
+        app:layout_constraintStart_toStartOf="@+id/videoButton"
+        app:layout_constraintEnd_toEndOf="@+id/videoButton"
+        android:layout_marginTop="8dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
