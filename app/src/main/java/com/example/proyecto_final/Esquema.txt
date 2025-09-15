@@ -11,3 +11,5 @@ por defecto esta pantalla de favoritos esta vacia
 Modelo de trabajo:
 Hacen su pull request de sus juegos y yo lo integrare al repositorio desde github.
 Haremos la pantalla de inicio todos en conjunto en clase pero si quieren irle avanzand a un juego esta bien
+
+La neta me caga base de datos
