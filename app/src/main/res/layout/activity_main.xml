@@ -47,15 +47,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- VideoView para mostrar un video -->
+    <!-- VideoView para mostrar un video, con ancho fijo y altura automática según la relación de aspecto -->
     <VideoView
         android:id="@+id/videoButton"
         android:layout_width="150dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="20dp"
+        android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@+id/tvDescription"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintHorizontal_bias="0.2" />
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintDimensionRatio="16:9"
+        android:layout_marginTop="20dp" />
 
     <!-- Botón para iniciar el juego, inicialmente invisible -->
     <Button
