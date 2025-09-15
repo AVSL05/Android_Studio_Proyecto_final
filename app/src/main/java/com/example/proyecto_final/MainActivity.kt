@@ -6,19 +6,22 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
-import android.widget.VideoView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.proyecto_final.Juegos.Snake
 import com.example.proyecto_final.utils.SessionManager
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.ui.PlayerView
 
 // Actividad principal que muestra información del usuario y permite cerrar sesión
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var sessionManager: SessionManager
+    private lateinit var exoPlayer: ExoPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,19 +45,18 @@ class MainActivity : AppCompatActivity() {
         setupUserInfo()
         setupLogoutButton()
 
-        // Configurar el VideoView como botón interactivo
-        val videoButton = findViewById<VideoView>(R.id.videoButton)
+        // Configurar ExoPlayer para el video
+        val playerView = findViewById<PlayerView>(R.id.videoButton)
+        exoPlayer = ExoPlayer.Builder(this).build()
+        playerView.player = exoPlayer
+        val rawUri = Uri.parse("android.resource://" + packageName + "/" + R.raw.prueba_para_juego)
+        val mediaItem = MediaItem.fromUri(rawUri)
+        exoPlayer.setMediaItem(mediaItem)
+        exoPlayer.prepare()
         val btnPlaySnake = findViewById<Button>(R.id.btnPlaySnake)
-        val videoUri = Uri.parse("android.resource://" + packageName + "/" + R.raw.prueba_para_juego)
-        videoButton.setVideoURI(videoUri)
-        videoButton.setOnPreparedListener { mp ->
-            mp.isLooping = true // Bucle infinito
-            videoButton.seekTo(1) // Mostrar el primer frame como preview para que no se mire en negro
-        }
-        videoButton.setOnClickListener {
-            // Al hacer clic, reproducir el video en bucle y mostrar el botón 'Jugar'
-            if (!videoButton.isPlaying) {
-                videoButton.start()
+        playerView.setOnClickListener {
+            if (!exoPlayer.isPlaying) {
+                exoPlayer.play()
             }
             btnPlaySnake.visibility = View.VISIBLE
         }
@@ -81,6 +83,13 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (::exoPlayer.isInitialized) {
+            exoPlayer.release()
         }
     }
 }
