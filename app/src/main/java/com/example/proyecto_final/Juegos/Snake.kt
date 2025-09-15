@@ -71,10 +71,6 @@ class Snake : Activity() {
             var snakeY = snake.y
 
 
-
-
-
-
             meat.setImageResource(R.drawable.meat)
             meat.layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -91,13 +87,6 @@ class Snake : Activity() {
 
             meat.x = randomX.toFloat()
             meat.y = randomY.toFloat()
-
-
-
-
-
-
-
 
 
 
@@ -132,7 +121,7 @@ class Snake : Activity() {
                     delayMillis-- // Reducir el valor de retardo en 1
                     scorex++
 
-                    score2.text =   "score : " + scorex.toString() // Actualiza la vista de texto retrasado
+                    score2.text =   "puntuacion : " + scorex.toString() // Actualiza la vista de texto retrasado
 
 
 
@@ -152,16 +141,16 @@ class Snake : Activity() {
 
 
                     when (currentDirection) {
-                        "up" -> {
+                        "arriba" -> {
                             snakeY -= 10
                             if (snakeY < -490) { // Comprueba si ImageView se sale de la parte superior del tablero
                                 snakeY = -490f
                                 border.setBackgroundColor(getResources().getColor(R.color.red))
                                 playagain.visibility = View.VISIBLE
-                                currentDirection = "pause"
+                                currentDirection = "pausa"
                                 lilu.visibility = View.INVISIBLE
 
-                                score.text =   "your score is  " + scorex.toString() // Actualizar vista de texto de retraso
+                                score.text =   "Tu puntuacion es  " + scorex.toString() // Actualizar vista de texto de retraso
                                 score.visibility = View.VISIBLE
                                 score2.visibility = View.INVISIBLE
 
@@ -171,7 +160,7 @@ class Snake : Activity() {
 
                             snake.translationY = snakeY
                         }
-                        "down" -> {
+                        "abajo" -> {
                             snakeY += 10
                             val maxY =
                                 board.height / 2 - snake.height + 30 // Calcular la coordenada y máxima
@@ -179,10 +168,10 @@ class Snake : Activity() {
                                 snakeY = maxY.toFloat()
                                 border.setBackgroundColor(getResources().getColor(R.color.red))
                                 playagain.visibility = View.VISIBLE
-                                currentDirection = "pause"
+                                currentDirection = "pausa"
                                 lilu.visibility = View.INVISIBLE
 
-                                score.text =   "your score is  " + scorex.toString() // Actualizar vista de texto de retraso
+                                score.text =   "Tu puntuacion es  " + scorex.toString() // Actualizar vista de texto de retraso
                                 score.visibility = View.VISIBLE
                                 score2.visibility = View.INVISIBLE
 
@@ -190,15 +179,15 @@ class Snake : Activity() {
                             }
                             snake.translationY = snakeY
                         }
-                        "left" -> {
+                        "izquierda" -> {
                             snakeX -= 10
                             if (snakeX < -490) { // Comprueba si ImageView se sale de la parte superior del tablero
                                 snakeX = -490f
                                 border.setBackgroundColor(getResources().getColor(R.color.red))
                                 playagain.visibility = View.VISIBLE
-                                currentDirection = "pause"
+                                currentDirection = "pausa"
                                 lilu.visibility = View.INVISIBLE
-                                score.text =   "your score is  " + scorex.toString() // Actualizar vista de texto de retraso
+                                score.text =   "Tu puntuacion es  " + scorex.toString() // Actualizar vista de texto de retraso
                                 score.visibility = View.VISIBLE
                                 score2.visibility = View.INVISIBLE
 
@@ -207,7 +196,7 @@ class Snake : Activity() {
                             }
                             snake.translationX = snakeX
                         }
-                        "right" -> {
+                        "derecha" -> {
                             snakeX += 10
                             val maxX =
                                 board.height / 2 - snake.height + 30 // Calcular la coordenada y máxima
@@ -215,10 +204,10 @@ class Snake : Activity() {
                                 snakeX = maxX.toFloat()
                                 border.setBackgroundColor(getResources().getColor(R.color.red))
                                 playagain.visibility = View.VISIBLE
-                                currentDirection = "pause"
+                                currentDirection = "pausar"
                                 lilu.visibility = View.INVISIBLE
 
-                                score.text =   "your score is  " + scorex.toString() // Actualizar vista de texto de retraso
+                                score.text =   "Tu puntuacion es  " + scorex.toString() // Actualizar vista de texto de retraso
                                 score.visibility = View.VISIBLE
                                 score2.visibility = View.INVISIBLE
 
@@ -227,7 +216,7 @@ class Snake : Activity() {
                             snake.translationX = snakeX
                         }
 
-                        "pause" -> {
+                        "pausa" -> {
                             snakeX += 0
                             snake.translationX = snakeX
                         }
@@ -242,26 +231,26 @@ class Snake : Activity() {
 
 // Establezca el botón onClickListeners para actualizar la variable currentDirection cuando se presione
             upButton.setOnClickListener {
-                currentDirection = "up"
+                currentDirection = "ARRIBA"
             }
             downButton.setOnClickListener {
-                currentDirection = "down"
+                currentDirection = "ABAJO"
             }
             leftButton.setOnClickListener {
-                currentDirection = "left"
+                currentDirection = "IZQUIERDA"
             }
             rightButton.setOnClickListener {
-                currentDirection = "right"
+                currentDirection = "DERECHA"
             }
             pauseButton.setOnClickListener {
-                currentDirection = "pause"
+                currentDirection = "PAUSA"
                 board.visibility = View.INVISIBLE
                 newgame.visibility = View.VISIBLE
                 resume.visibility = View.VISIBLE
 
             }
             resume.setOnClickListener {
-                currentDirection = "right"
+                currentDirection = "DERECHA"
                 board.visibility = View.VISIBLE
                 newgame.visibility = View.INVISIBLE
                 resume.visibility = View.INVISIBLE
