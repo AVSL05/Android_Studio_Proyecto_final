@@ -3,17 +3,17 @@ package com.example.proyecto_final.Juegos
 import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
-import com.example.proyecto_final.R
-import java.util.Random
+import android.widget.Toast
+import java.util.*
 import kotlin.math.pow
 import kotlin.math.sqrt
+import com.example.proyecto_final.R
 
 class Snake : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,10 +36,10 @@ class Snake : Activity() {
         val meat = ImageView(this)
         val snake = ImageView(this)
         val snakeSegments =
-            mutableListOf(snake) // Mantiene el sentido del tablero
-        val handler = Handler(Looper.getMainLooper())
-        var delayMillis = 30L // Actualiza la posición de la serpiente cada 100 mili segundos
-        var currentDirection = "right" // Empieza por la derecha de manera default
+            mutableListOf(snake) // Keep track of the position of each snake segment
+        val handler = Handler()
+        var delayMillis = 30L // Update snake position every 100 milliseconds
+        var currentDirection = "right" // Start moving right by default
         var scorex = 0
 
 
@@ -64,11 +64,15 @@ class Snake : Activity() {
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
             board.addView(snake)
-            snakeSegments.add(snake) // Añade un segmento nuevo de la serpiente
+            snakeSegments.add(snake) // Add the new snake segment to the list
 
 
             var snakeX = snake.x
             var snakeY = snake.y
+
+
+
+
 
 
             meat.setImageResource(R.drawable.meat)
@@ -78,15 +82,22 @@ class Snake : Activity() {
             )
             board.addView(meat)
 
-            val random = Random() // Crea un objeto Random
+            val random = Random() // create a Random object
             val randomX =
-                random.nextInt(801) - 400 // generar una coordenada x aleatoria entre -400 y 400
+                random.nextInt(801) - 400 // generate a random x-coordinate between -400 and 400
             val randomY =
-                random.nextInt(801) - 400 // generar una coordenada y aleatoria entre -400 y 400
+                random.nextInt(801) - 400 // generate a random y-coordinate between -400 and 400
 
 
             meat.x = randomX.toFloat()
             meat.y = randomY.toFloat()
+
+
+
+
+
+
+
 
 
 
@@ -95,10 +106,10 @@ class Snake : Activity() {
 
                 val distance = sqrt((snake.x - meat.x).pow(2) + (snake.y - meat.y).pow(2))
 
-                if (distance < distanceThreshold) { // Comprueba si la distancia entre la cabeza de la serpiente y la carne es menor que el umbral
+                if (distance < distanceThreshold) { // Check if the distance between the snake head and the meat is less than the threshold
 
                     val newSnake =
-                        ImageView(this) // Crea una nueva ImageView para el segmento de serpiente adicional
+                        ImageView(this) // Create a new ImageView for the additional snake segment
                     newSnake.setImageResource(R.drawable.snake)
                     newSnake.layoutParams = ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -106,7 +117,7 @@ class Snake : Activity() {
                     )
                     board.addView(newSnake)
 
-                    snakeSegments.add(newSnake) // Añade el nuevo segmento de serpiente a la lista
+                    snakeSegments.add(newSnake) // Add the new snake segment to the list
 
                     val randomX =
                         random.nextInt(801) - -100
@@ -118,10 +129,10 @@ class Snake : Activity() {
                     meat.y = randomY.toFloat()
 
 
-                    delayMillis-- // Reducir el valor de retardo en 1
+                    delayMillis-- // Reduce delay value by 1
                     scorex++
 
-                    score2.text =   "puntuacion : " + scorex.toString() // Actualiza la vista de texto retrasado
+                    score2.text =   "score : " + scorex.toString() // Update delay text view
 
 
 
@@ -134,23 +145,23 @@ class Snake : Activity() {
             val runnable = object : Runnable {
                 override fun run() {
 
-                    for (i in snakeSegments.size - 1 downTo 1) { // Actualiza la posición de cada segmento de la serpiente.
+                    for (i in snakeSegments.size - 1 downTo 1) { // Update the position of each snake segment except for the head
                         snakeSegments[i].x = snakeSegments[i - 1].x
                         snakeSegments[i].y = snakeSegments[i - 1].y
                     }
 
 
                     when (currentDirection) {
-                        "arriba" -> {
+                        "up" -> {
                             snakeY -= 10
-                            if (snakeY < -490) { // Comprueba si ImageView se sale de la parte superior del tablero
+                            if (snakeY < -490) { // Check if the ImageView goes off the top of the board
                                 snakeY = -490f
                                 border.setBackgroundColor(getResources().getColor(R.color.red))
                                 playagain.visibility = View.VISIBLE
-                                currentDirection = "pausa"
+                                currentDirection = "pause"
                                 lilu.visibility = View.INVISIBLE
 
-                                score.text =   "Tu puntuacion es  " + scorex.toString() // Actualizar vista de texto de retraso
+                                score.text =   "your score is  " + scorex.toString() // Update delay text view
                                 score.visibility = View.VISIBLE
                                 score2.visibility = View.INVISIBLE
 
@@ -160,18 +171,18 @@ class Snake : Activity() {
 
                             snake.translationY = snakeY
                         }
-                        "abajo" -> {
+                        "down" -> {
                             snakeY += 10
                             val maxY =
-                                board.height / 2 - snake.height + 30 // Calcular la coordenada y máxima
-                            if (snakeY > maxY) { // Comprueba si ImageView se sale de la parte inferior del tablero
+                                board.height / 2 - snake.height + 30 // Calculate the maximum y coordinate
+                            if (snakeY > maxY) { // Check if the ImageView goes off the bottom of the board
                                 snakeY = maxY.toFloat()
                                 border.setBackgroundColor(getResources().getColor(R.color.red))
                                 playagain.visibility = View.VISIBLE
-                                currentDirection = "pausa"
+                                currentDirection = "pause"
                                 lilu.visibility = View.INVISIBLE
 
-                                score.text =   "Tu puntuacion es  " + scorex.toString() // Actualizar vista de texto de retraso
+                                score.text =   "your score is  " + scorex.toString() // Update delay text view
                                 score.visibility = View.VISIBLE
                                 score2.visibility = View.INVISIBLE
 
@@ -179,15 +190,15 @@ class Snake : Activity() {
                             }
                             snake.translationY = snakeY
                         }
-                        "izquierda" -> {
+                        "left" -> {
                             snakeX -= 10
-                            if (snakeX < -490) { // Comprueba si ImageView se sale de la parte superior del tablero
+                            if (snakeX < -490) { // Check if the ImageView goes off the top of the board
                                 snakeX = -490f
                                 border.setBackgroundColor(getResources().getColor(R.color.red))
                                 playagain.visibility = View.VISIBLE
-                                currentDirection = "pausa"
+                                currentDirection = "pause"
                                 lilu.visibility = View.INVISIBLE
-                                score.text =   "Tu puntuacion es  " + scorex.toString() // Actualizar vista de texto de retraso
+                                score.text =   "your score is  " + scorex.toString() // Update delay text view
                                 score.visibility = View.VISIBLE
                                 score2.visibility = View.INVISIBLE
 
@@ -196,18 +207,18 @@ class Snake : Activity() {
                             }
                             snake.translationX = snakeX
                         }
-                        "derecha" -> {
+                        "right" -> {
                             snakeX += 10
                             val maxX =
-                                board.height / 2 - snake.height + 30 // Calcular la coordenada y máxima
-                            if (snakeX > maxX) { // Comprueba si ImageView se sale de la parte inferior del tablero
+                                board.height / 2 - snake.height + 30 // Calculate the maximum y coordinate
+                            if (snakeX > maxX) { // Check if the ImageView goes off the bottom of the board
                                 snakeX = maxX.toFloat()
                                 border.setBackgroundColor(getResources().getColor(R.color.red))
                                 playagain.visibility = View.VISIBLE
-                                currentDirection = "pausar"
+                                currentDirection = "pause"
                                 lilu.visibility = View.INVISIBLE
 
-                                score.text =   "Tu puntuacion es  " + scorex.toString() // Actualizar vista de texto de retraso
+                                score.text =   "your score is  " + scorex.toString() // Update delay text view
                                 score.visibility = View.VISIBLE
                                 score2.visibility = View.INVISIBLE
 
@@ -216,7 +227,7 @@ class Snake : Activity() {
                             snake.translationX = snakeX
                         }
 
-                        "pausa" -> {
+                        "pause" -> {
                             snakeX += 0
                             snake.translationX = snakeX
                         }
@@ -229,28 +240,28 @@ class Snake : Activity() {
 
             handler.postDelayed(runnable, delayMillis)
 
-// Establezca el botón onClickListeners para actualizar la variable currentDirection cuando se presione
+// Set button onClickListeners to update the currentDirection variable when pressed
             upButton.setOnClickListener {
-                currentDirection = "ARRIBA"
+                currentDirection = "up"
             }
             downButton.setOnClickListener {
-                currentDirection = "ABAJO"
+                currentDirection = "down"
             }
             leftButton.setOnClickListener {
-                currentDirection = "IZQUIERDA"
+                currentDirection = "left"
             }
             rightButton.setOnClickListener {
-                currentDirection = "DERECHA"
+                currentDirection = "right"
             }
             pauseButton.setOnClickListener {
-                currentDirection = "PAUSA"
+                currentDirection = "pause"
                 board.visibility = View.INVISIBLE
                 newgame.visibility = View.VISIBLE
                 resume.visibility = View.VISIBLE
 
             }
             resume.setOnClickListener {
-                currentDirection = "DERECHA"
+                currentDirection = "right"
                 board.visibility = View.VISIBLE
                 newgame.visibility = View.INVISIBLE
                 resume.visibility = View.INVISIBLE
