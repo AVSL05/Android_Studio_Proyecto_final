@@ -54,6 +54,7 @@ class Buscaminas : AppCompatActivity() {
         }
 
         // Botón salir
+        val btnExitBuscaminas = findViewById<Button>(R.id.btnExitBuscaminas)
         btnExitBuscaminas.setOnClickListener {
             val intent = Intent(this, Buscaminas::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
