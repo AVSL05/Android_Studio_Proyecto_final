@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.proyecto_final.Juegos.MemoramaActivity
 import com.example.proyecto_final.Juegos.Snake
 import com.example.proyecto_final.Juegos.SudokuActivity
+import com.example.proyecto_final.Juegos.Buscaminas
 import com.example.proyecto_final.utils.SessionManager
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var exoPlayer: ExoPlayer
     private lateinit var exoPlayerMemorama: ExoPlayer
     private lateinit var exoPlayerSudoku: ExoPlayer
+    private lateinit var exoPlayerBuscaMinas: ExoPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,6 +110,26 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, SudokuActivity::class.java)
             startActivity(intent)
         }
+
+        // Configurar cuarto ExoPlayer para el video de BuscaMinas
+        val playerViewBuscaMinas = findViewById<PlayerView>(R.id.videoButtonBuscaMinas)
+        exoPlayerBuscaMinas = ExoPlayer.Builder(this).build()
+        playerViewBuscaMinas.player = exoPlayerBuscaMinas
+        val rawUriBuscaMinas = Uri.parse("android.resource://" + packageName + "/" + R.raw.prueba_para_juego)
+        val mediaItemBuscaMinas = MediaItem.fromUri(rawUriBuscaMinas)
+        exoPlayerBuscaMinas.setMediaItem(mediaItemBuscaMinas)
+        exoPlayerBuscaMinas.prepare()
+        val btnPlayBuscaMinas = findViewById<Button>(R.id.btnPlayBuscaMinas)
+        playerViewBuscaMinas.setOnClickListener {
+            if (!exoPlayerBuscaMinas.isPlaying) {
+                exoPlayerBuscaMinas.play()
+            }
+            btnPlayBuscaMinas.visibility = View.VISIBLE
+        }
+        btnPlayBuscaMinas.setOnClickListener {
+            val intent = Intent(this, Buscaminas::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun setupUserInfo() {
@@ -140,6 +162,9 @@ class MainActivity : AppCompatActivity() {
         }
         if (::exoPlayerSudoku.isInitialized) {
             exoPlayerSudoku.release()
+        }
+        if (::exoPlayerBuscaMinas.isInitialized) {
+            exoPlayerBuscaMinas.release()
         }
     }
 }
