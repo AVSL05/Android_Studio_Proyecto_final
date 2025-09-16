@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".Juegos.Snake">
 
+    <!-- Titulo del juego -->
     <Button
         android:id="@+id/score2"
         android:layout_width="150dp"
@@ -19,6 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Boton para salir del juego -->
     <Button
         android:id="@+id/btnExitSnake"
         android:layout_width="wrap_content"
@@ -33,6 +35,7 @@
         android:layout_marginBottom="8dp" />
 
 
+    <!-- Area del juego -->
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="390dp"
@@ -45,6 +48,7 @@
 
 
 
+        <!-- Mensaje de Game Over -->
         <Button
             android:id="@+id/score"
             android:background="@color/black"
@@ -59,7 +63,7 @@
         </Button>
 
 
-
+        <!-- Botones de control del juego -->
         <Button
             android:id="@+id/new_game"
             android:background="@color/purple_700"
@@ -72,6 +76,7 @@
 
         </Button>
 
+        <!-- Boton para reanudar el juego -->
         <Button
             android:id="@+id/resume"
             android:background="@color/purple_700"
@@ -86,6 +91,7 @@
 
         </Button>
 
+        <!-- Boton para jugar de nuevo -->
         <Button
             android:id="@+id/playagain"
             android:background="@color/red"
@@ -102,6 +108,7 @@
 
         </Button>
 
+        <!-- Tablero del juego -->
         <RelativeLayout
             android:id="@+id/board"
             android:layout_width="380dp"
@@ -118,6 +125,7 @@
     </RelativeLayout>
 
 
+    <!-- Controles del juego -->
     <LinearLayout
         android:id="@+id/lilu"
         android:layout_width="330dp"
@@ -130,11 +138,13 @@
         tools:ignore="MissingConstraints">
 
 
+        <!-- Boton para mover hacia arriba -->
         <LinearLayout
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="100dp">
 
+            <!-- Boton de mover hacia arriba -->
             <Button
                 android:id="@+id/up"
                 android:layout_margin="10dp"
@@ -149,6 +159,7 @@
 
 
 
+        <!-- Botones para mover izquierda, derecha y pausar -->
         <LinearLayout
 
             android:layout_width="match_parent"
@@ -187,6 +198,7 @@
 
 
 
+        <!-- Boton para mover hacia abajo -->
         <LinearLayout
             android:gravity="center"
             android:layout_width="match_parent"

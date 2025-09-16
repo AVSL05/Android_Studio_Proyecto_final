@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".juegos.MemoramaActivity">
 
+    <!-- Título del juego -->
     <TextView
         android:id="@+id/tvMemoramaTitle"
         android:layout_width="wrap_content"
@@ -18,6 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="32dp"/>
 
+    <!-- Botón para salir del juego -->
     <Button
         android:id="@+id/btnExitMemorama"
         android:layout_width="wrap_content"
@@ -31,6 +33,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="8dp"/>
 
+    <!-- GridLayout para las cartas del memorama -->
     <GridLayout
         android:id="@+id/gridMemorama"
         android:layout_width="0dp"

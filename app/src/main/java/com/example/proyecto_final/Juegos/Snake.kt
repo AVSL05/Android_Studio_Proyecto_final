@@ -22,6 +22,7 @@ class Snake : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_snake)
 
+        // Inicializar vistas
         val board = findViewById<RelativeLayout>(R.id.board)
         val border = findViewById<RelativeLayout>(R.id.relativeLayout)
         val lilu = findViewById<LinearLayout>(R.id.lilu)
@@ -53,6 +54,7 @@ class Snake : Activity() {
             finish()
         }
 
+        // Ocultar vistas innecesarias al iniciar el juego
         board.visibility = View.INVISIBLE
         playagain.visibility = View.INVISIBLE
         score.visibility = View.INVISIBLE
@@ -62,12 +64,14 @@ class Snake : Activity() {
         newgame.setOnClickListener {
 
 
+            // Mostrar el tablero y ocultar los botones de nuevo juego y reanudar
             board.visibility = View.VISIBLE
             newgame.visibility = View.INVISIBLE
             resume.visibility = View.INVISIBLE
             score2.visibility = View.VISIBLE
 
 
+            // Configurar la imagen y posición inicial de la serpiente
             snake.setImageResource(R.drawable.snake)
             snake.layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,

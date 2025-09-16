@@ -15,7 +15,7 @@ import com.example.proyecto_final.MainActivity
 import com.example.proyecto_final.R
 
 class SudokuActivity : AppCompatActivity() {
-
+    // Vistas
     private lateinit var gridLayout: GridLayout
     private lateinit var numberButtons: LinearLayout
     private lateinit var tvLives: TextView
@@ -31,6 +31,7 @@ class SudokuActivity : AppCompatActivity() {
     private var selectedCol = -1
     private var lives = 3
 
+    // Vida máxima
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sudoku)
@@ -44,6 +45,7 @@ class SudokuActivity : AppCompatActivity() {
         updateLivesDisplay()
     }
 
+    // Inicializar vistas
     private fun initViews() {
         gridLayout = findViewById(R.id.gridSudoku)
         numberButtons = findViewById(R.id.numberButtons)
@@ -51,6 +53,7 @@ class SudokuActivity : AppCompatActivity() {
         btnHint = findViewById(R.id.btnHint)
         btnExit = findViewById(R.id.btnExit)
     }
+    // Generar Sudoku con solución
 
     private fun generateSudoku() {
         // Soluciones de ejemplo
@@ -79,6 +82,7 @@ class SudokuActivity : AppCompatActivity() {
             )
         )
 
+        // Seleccionar solución aleatoria
         val randomSolution = solutions.random()
         for (i in 0..8) for (j in 0..8) solutionGrid[i][j] = randomSolution[i][j]
 
@@ -86,6 +90,7 @@ class SudokuActivity : AppCompatActivity() {
         val puzzle = Array(9) { Array(9) { 0 } }
         for (i in 0..8) for (j in 0..8) puzzle[i][j] = solutionGrid[i][j]
 
+        // Eliminar celdas aleatoriamente
         val allCells = mutableListOf<Pair<Int, Int>>()
         for (i in 0..8) for (j in 0..8) allCells.add(Pair(i, j))
         allCells.shuffle()
@@ -118,17 +123,20 @@ class SudokuActivity : AppCompatActivity() {
             }
         }
 
+        // Copiar puzzle a las matrices de juego
         for (i in 0..8) for (j in 0..8) {
             sudokuGrid[i][j] = puzzle[i][j]
             initialGrid[i][j] = puzzle[i][j]
         }
     }
 
+    // Configurar la cuadrícula del Sudoku
     private fun setupGrid() {
         gridLayout.removeAllViews()
         gridLayout.rowCount = 9
         gridLayout.columnCount = 9
 
+        // Crear botones para cada celda
         for (i in 0..8) {
             for (j in 0..8) {
                 val button = Button(this)
@@ -140,6 +148,7 @@ class SudokuActivity : AppCompatActivity() {
                     setMargins(2, 2, 2, 2)
                 }
 
+                // Configurar botón según si es inicial o editable
                 if (initialGrid[i][j] != 0) {
                     button.text = initialGrid[i][j].toString()
                     button.setBackgroundColor(Color.LTGRAY)
@@ -165,6 +174,7 @@ class SudokuActivity : AppCompatActivity() {
         }
     }
 
+    // Configurar botones numéricos
     private fun setupNumberButtons() {
         numberButtons.removeAllViews()
         for (num in 1..9) {
@@ -184,6 +194,7 @@ class SudokuActivity : AppCompatActivity() {
             numberButtons.addView(button)
         }
 
+        // Botón para borrar
         val clearButton = Button(this)
         clearButton.text = getString(R.string.clear)
         clearButton.textSize = 16f
@@ -200,10 +211,12 @@ class SudokuActivity : AppCompatActivity() {
         numberButtons.addView(clearButton)
     }
 
+    // Configurar botón de pista
     private fun setupHintButton() {
         btnHint.setOnClickListener { giveHint() }
     }
 
+    // Proporcionar una pista al jugador
     private fun giveHint() {
         val emptyCells = mutableListOf<Pair<Int, Int>>()
         for (i in 0..8) for (j in 0..8) if (sudokuGrid[i][j] == 0) emptyCells.add(Pair(i, j))
@@ -225,6 +238,7 @@ class SudokuActivity : AppCompatActivity() {
         if (isPuzzleComplete()) showWinDialog()
     }
 
+    // Seleccionar una celda en la cuadrícula
     private fun selectCell(row: Int, col: Int) {
         if (selectedRow != -1 && selectedCol != -1) {
             val prev = cellButtons[selectedRow][selectedCol]
@@ -239,6 +253,7 @@ class SudokuActivity : AppCompatActivity() {
         }
     }
 
+    // Colocar un número en la celda seleccionada
     private fun placeNumber(num: Int) {
         if (selectedRow == -1 || selectedCol == -1) return
 
@@ -259,6 +274,7 @@ class SudokuActivity : AppCompatActivity() {
         if (isPuzzleComplete()) showWinDialog()
     }
 
+    // Actualizar la visualización de vidas
     private fun updateLivesDisplay() {
         val heartsText = when (lives) {
             3 -> "Vidas: ❤️❤️❤️"
@@ -270,11 +286,13 @@ class SudokuActivity : AppCompatActivity() {
         tvLives.text = heartsText
     }
 
+    // Verificar si el puzzle está completo
     private fun isPuzzleComplete(): Boolean {
         for (i in 0..8) for (j in 0..8) if (sudokuGrid[i][j] != solutionGrid[i][j]) return false
         return true
     }
 
+    // Mostrar diálogo de fin de juego
     private fun showGameOverDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("¡Game Over!")
@@ -291,6 +309,7 @@ class SudokuActivity : AppCompatActivity() {
         builder.create().show()
     }
 
+    // Mostrar diálogo de victoria
     private fun showWinDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("¡Felicidades!")
@@ -307,6 +326,7 @@ class SudokuActivity : AppCompatActivity() {
         builder.create().show()
     }
 
+    // Configurar botón de salida con confirmación
     private fun setupExitButton() {
             Log.d("SudokuActivity", "btnExit clicked - showing confirmation dialog")
             Toast.makeText(this, "Preparando salida...", Toast.LENGTH_SHORT).show()

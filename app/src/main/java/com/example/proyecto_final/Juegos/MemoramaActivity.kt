@@ -30,6 +30,7 @@ class MemoramaActivity : AppCompatActivity() {
             finish()
         }
 
+        // Configurar el juego
         val gridLayout = findViewById<GridLayout>(R.id.gridMemorama)
         val numPairs = 8
         val images = listOf(
@@ -38,18 +39,22 @@ class MemoramaActivity : AppCompatActivity() {
             android.R.drawable.ic_menu_directions, android.R.drawable.ic_menu_gallery,
             android.R.drawable.ic_menu_manage, android.R.drawable.ic_menu_mapmode
         )
+        // Asegurarse de tener suficientes imágenes
         val cards = (images + images).shuffled().mapIndexed { index, imageResId ->
             Card(id = index, imageResId = imageResId)
         }
 
+        // Variables para el estado del juego
         var firstFlipped: Button? = null
         var firstCard: Card? = null
         var matchedPairs = 0
 
+        // Configurar la cuadrícula
         gridLayout.removeAllViews()
         gridLayout.rowCount = 4
         gridLayout.columnCount = 4
 
+        // Crear botones para las cartas
         val buttons = mutableListOf<Button>()
         for (i in 0 until 16) {
             val btn = Button(this)
@@ -81,6 +86,7 @@ class MemoramaActivity : AppCompatActivity() {
                             if (matchedPairs == numPairs) {
                                 showWinDialog()
                             }
+                            // Dejar las cartas volteadas
                         } else {
                             btn.setBackgroundResource(0)
                             btn.text = "?"
@@ -89,10 +95,11 @@ class MemoramaActivity : AppCompatActivity() {
                             card.isFlipped = false
                             firstCard?.isFlipped = false
                         }
+                        // Resetear para la siguiente jugada
                         firstFlipped = null
                         firstCard = null
                         gridLayout.isEnabled = true
-                    }, 800)
+                    }, 500)
                 }
             }
             gridLayout.addView(btn)
@@ -100,6 +107,7 @@ class MemoramaActivity : AppCompatActivity() {
         }
     }
 
+    // Mostrar diálogo de victoria
     private fun showWinDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("¡Felicidades!")
@@ -121,6 +129,7 @@ class MemoramaActivity : AppCompatActivity() {
             finish()
         }
 
+        // Botón para salir de la aplicación
         val dialog = builder.create()
         dialog.show()
     }
