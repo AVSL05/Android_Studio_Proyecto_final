@@ -37,6 +37,10 @@
             android:name=".Juegos.MemoramaActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".Juegos.SudokuActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

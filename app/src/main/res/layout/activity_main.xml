@@ -95,4 +95,28 @@
         app:layout_constraintEnd_toEndOf="@+id/videoButtonMemorama"
         android:layout_marginTop="8dp" />
 
+    <!-- Tercer PlayerView para Sudoku -->
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/videoButtonSudoku"
+        android:layout_width="150dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/btnPlayMemorama"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintDimensionRatio="16:9"
+        android:layout_marginTop="20dp"
+        app:use_controller="false" />
+
+    <!-- Botón para iniciar Sudoku, inicialmente invisible -->
+    <Button
+        android:id="@+id/btnPlaySudoku"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Jugar Sudoku"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/videoButtonSudoku"
+        app:layout_constraintStart_toStartOf="@+id/videoButtonSudoku"
+        app:layout_constraintEnd_toEndOf="@+id/videoButtonSudoku"
+        android:layout_marginTop="8dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

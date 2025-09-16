@@ -1,6 +1,7 @@
 package com.example.proyecto_final.Juegos
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
@@ -14,6 +15,7 @@ import java.util.*
 import kotlin.math.pow
 import kotlin.math.sqrt
 import com.example.proyecto_final.R
+import com.example.proyecto_final.MainActivity
 
 class Snake : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +35,7 @@ class Snake : Activity() {
         val playagain = findViewById<Button>(R.id.playagain)
         val score = findViewById<Button>(R.id.score)
         val score2 = findViewById<Button>(R.id.score2)
+        val btnExitSnake = findViewById<Button>(R.id.btnExitSnake)
         val meat = ImageView(this)
         val snake = ImageView(this)
         val snakeSegments =
@@ -42,12 +45,19 @@ class Snake : Activity() {
         var currentDirection = "right" // Start moving right by default
         var scorex = 0
 
-
+        // Configurar botón de salir del juego
+        btnExitSnake.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+            finish()
+        }
 
         board.visibility = View.INVISIBLE
         playagain.visibility = View.INVISIBLE
         score.visibility = View.INVISIBLE
         score2.visibility = View.INVISIBLE
+        btnExitSnake.visibility = View.VISIBLE
 
         newgame.setOnClickListener {
 

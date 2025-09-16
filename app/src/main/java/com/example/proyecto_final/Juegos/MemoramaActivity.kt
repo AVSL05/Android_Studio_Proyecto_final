@@ -21,6 +21,15 @@ class MemoramaActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_memorama)
 
+        // Configurar botón de salir
+        val btnExitMemorama = findViewById<Button>(R.id.btnExitMemorama)
+        btnExitMemorama.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+            finish()
+        }
+
         val gridLayout = findViewById<GridLayout>(R.id.gridMemorama)
         val numPairs = 8
         val images = listOf(

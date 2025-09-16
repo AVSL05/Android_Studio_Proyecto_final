@@ -12,6 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.proyecto_final.Juegos.MemoramaActivity
 import com.example.proyecto_final.Juegos.Snake
+import com.example.proyecto_final.Juegos.SudokuActivity
 import com.example.proyecto_final.utils.SessionManager
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sessionManager: SessionManager
     private lateinit var exoPlayer: ExoPlayer
     private lateinit var exoPlayerMemorama: ExoPlayer
+    private lateinit var exoPlayerSudoku: ExoPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,6 +88,26 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, MemoramaActivity::class.java)
             startActivity(intent)
         }
+
+        // Configurar tercer ExoPlayer para el video de Sudoku
+        val playerViewSudoku = findViewById<PlayerView>(R.id.videoButtonSudoku)
+        exoPlayerSudoku = ExoPlayer.Builder(this).build()
+        playerViewSudoku.player = exoPlayerSudoku
+        val rawUriSudoku = Uri.parse("android.resource://" + packageName + "/" + R.raw.prueba_para_juego)
+        val mediaItemSudoku = MediaItem.fromUri(rawUriSudoku)
+        exoPlayerSudoku.setMediaItem(mediaItemSudoku)
+        exoPlayerSudoku.prepare()
+        val btnPlaySudoku = findViewById<Button>(R.id.btnPlaySudoku)
+        playerViewSudoku.setOnClickListener {
+            if (!exoPlayerSudoku.isPlaying) {
+                exoPlayerSudoku.play()
+            }
+            btnPlaySudoku.visibility = View.VISIBLE
+        }
+        btnPlaySudoku.setOnClickListener {
+            val intent = Intent(this, SudokuActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun setupUserInfo() {
@@ -115,6 +137,9 @@ class MainActivity : AppCompatActivity() {
         }
         if (::exoPlayerMemorama.isInitialized) {
             exoPlayerMemorama.release()
+        }
+        if (::exoPlayerSudoku.isInitialized) {
+            exoPlayerSudoku.release()
         }
     }
 }

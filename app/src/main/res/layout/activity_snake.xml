@@ -13,13 +13,24 @@
         android:background="@color/green"
         android:textStyle="bold"
         android:textColor="@color/black"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:text="puntuacion"
-        app:layout_constraintBottom_toTopOf="@+id/lilu"
+        app:layout_constraintBottom_toTopOf="@+id/btnExitSnake"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent" />
 
-    </Button>
+    <Button
+        android:id="@+id/btnExitSnake"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Salir del Juego"
+        android:textSize="16sp"
+        android:background="@color/red"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/lilu"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="8dp" />
 
 
     <RelativeLayout
