@@ -10,6 +10,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.proyecto_final.Juegos.MemoramaActivity
 import com.example.proyecto_final.Juegos.Snake
 import com.example.proyecto_final.utils.SessionManager
 import com.google.android.exoplayer2.ExoPlayer
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var sessionManager: SessionManager
     private lateinit var exoPlayer: ExoPlayer
+    private lateinit var exoPlayerMemorama: ExoPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         setupUserInfo()
         setupLogoutButton()
 
-        // Configurar ExoPlayer para el video
+        // Configurar ExoPlayer para el video de Snake
         val playerView = findViewById<PlayerView>(R.id.videoButton)
         exoPlayer = ExoPlayer.Builder(this).build()
         playerView.player = exoPlayer
@@ -62,6 +64,26 @@ class MainActivity : AppCompatActivity() {
         }
         btnPlaySnake.setOnClickListener {
             val intent = Intent(this, Snake::class.java)
+            startActivity(intent)
+        }
+
+        // Configurar segundo ExoPlayer para el video de Memorama
+        val playerViewMemorama = findViewById<PlayerView>(R.id.videoButtonMemorama)
+        exoPlayerMemorama = ExoPlayer.Builder(this).build()
+        playerViewMemorama.player = exoPlayerMemorama
+        val rawUriMemorama = Uri.parse("android.resource://" + packageName + "/" + R.raw.prueba_para_juego)
+        val mediaItemMemorama = MediaItem.fromUri(rawUriMemorama)
+        exoPlayerMemorama.setMediaItem(mediaItemMemorama)
+        exoPlayerMemorama.prepare()
+        val btnPlayMemorama = findViewById<Button>(R.id.btnPlayMemorama)
+        playerViewMemorama.setOnClickListener {
+            if (!exoPlayerMemorama.isPlaying) {
+                exoPlayerMemorama.play()
+            }
+            btnPlayMemorama.visibility = View.VISIBLE
+        }
+        btnPlayMemorama.setOnClickListener {
+            val intent = Intent(this, MemoramaActivity::class.java)
             startActivity(intent)
         }
     }
@@ -90,6 +112,9 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         if (::exoPlayer.isInitialized) {
             exoPlayer.release()
+        }
+        if (::exoPlayerMemorama.isInitialized) {
+            exoPlayerMemorama.release()
         }
     }
 }

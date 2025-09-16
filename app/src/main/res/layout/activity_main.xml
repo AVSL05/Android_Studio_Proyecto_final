@@ -71,4 +71,28 @@
         app:layout_constraintEnd_toEndOf="@+id/videoButton"
         android:layout_marginTop="8dp" />
 
+    <!-- Segundo PlayerView para memorama -->
+    <com.google.android.exoplayer2.ui.PlayerView
+        android:id="@+id/videoButtonMemorama"
+        android:layout_width="150dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/btnPlaySnake"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintDimensionRatio="16:9"
+        android:layout_marginTop="20dp"
+        app:use_controller="false" />
+
+    <!-- Botón para iniciar Memorama, inicialmente invisible -->
+    <Button
+        android:id="@+id/btnPlayMemorama"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Jugar Memorama"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/videoButtonMemorama"
+        app:layout_constraintStart_toStartOf="@+id/videoButtonMemorama"
+        app:layout_constraintEnd_toEndOf="@+id/videoButtonMemorama"
+        android:layout_marginTop="8dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

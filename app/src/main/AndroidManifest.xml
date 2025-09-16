@@ -33,6 +33,10 @@
             android:name=".Juegos.Snake"
             android:exported="false" />
 
+        <activity
+            android:name=".Juegos.MemoramaActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
