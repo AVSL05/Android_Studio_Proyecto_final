@@ -1,5 +1,6 @@
 package com.example.proyecto_final.Juegos
 
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.Gravity
@@ -17,7 +18,8 @@ class Buscaminas : AppCompatActivity() {
     private lateinit var gridLayout: GridLayout
     private lateinit var tvMines: TextView
     private lateinit var btnNewGame: Button
-    private lateinit var cbFlagMode: CheckBox   // <-- NUEVO
+    private lateinit var cbFlagMode: CheckBox
+    private lateinit var btnExitBuscaminas: Button
 
     private val rows = 9
     private val cols = 9
@@ -40,7 +42,8 @@ class Buscaminas : AppCompatActivity() {
         gridLayout = findViewById(R.id.grid)
         tvMines = findViewById(R.id.tvMines)
         btnNewGame = findViewById(R.id.btnNewGame)
-        cbFlagMode = findViewById(R.id.cbFlagMode) // <-- NUEVO
+        cbFlagMode = findViewById(R.id.cbFlagMode)
+        btnExitBuscaminas = findViewById(R.id.btnExitBuscaminas)
 
         btnNewGame.setOnClickListener { newGame() }
         cbFlagMode.setOnCheckedChangeListener { _, isChecked ->
@@ -50,12 +53,19 @@ class Buscaminas : AppCompatActivity() {
             ).show()
         }
 
+        // Botón salir
+        btnExitBuscaminas.setOnClickListener {
+            val intent = Intent(this, Buscaminas::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+            finish()
+        }
+
         setupBoardViews()
         newGame()
     }
 
     private fun setupBoardViews() {
-        // Crear botones solo una vez, y reutilizarlos al reiniciar partida
         buttons = Array(rows) { r ->
             Array(cols) { c ->
                 Button(this).apply {
@@ -70,7 +80,6 @@ class Buscaminas : AppCompatActivity() {
                     textSize = 16f
                     typeface = Typeface.DEFAULT_BOLD
 
-                    // TAP CORTO: respeta modo bandera
                     setOnClickListener {
                         if (cbFlagMode.isChecked) {
                             toggleFlag(r, c)
@@ -78,7 +87,6 @@ class Buscaminas : AppCompatActivity() {
                             onCellClick(r, c)
                         }
                     }
-                    // TAP LARGO: siempre alterna bandera
                     setOnLongClickListener {
                         toggleFlag(r, c)
                         true
@@ -93,14 +101,13 @@ class Buscaminas : AppCompatActivity() {
         gameOver = false
         firstClick = true
         flagsPlaced = 0
-        cbFlagMode.isChecked = false // <-- reset del modo bandera
+        cbFlagMode.isChecked = false
 
         isMine = Array(rows) { BooleanArray(cols) }
         adj = Array(rows) { IntArray(cols) }
         revealed = Array(rows) { BooleanArray(cols) }
         flagged = Array(rows) { BooleanArray(cols) }
 
-        // reset visual
         for (r in 0 until rows) {
             for (c in 0 until cols) {
                 val b = buttons[r][c]
@@ -114,7 +121,6 @@ class Buscaminas : AppCompatActivity() {
 
     private fun placeMines(excludeR: Int, excludeC: Int) {
         var placed = 0
-        // evita que la primera celda tocada sea mina
         while (placed < totalMines) {
             val r = Random.nextInt(rows)
             val c = Random.nextInt(cols)
@@ -128,8 +134,8 @@ class Buscaminas : AppCompatActivity() {
     private fun computeAdj() {
         val dirs = arrayOf(
             -1 to -1, -1 to 0, -1 to 1,
-            0 to -1,           0 to 1,
-            1 to -1,  1 to 0,  1 to 1
+            0 to -1,          0 to 1,
+            1 to -1,  1 to 0, 1 to 1
         )
         for (r in 0 until rows) {
             for (c in 0 until cols) {
@@ -159,15 +165,13 @@ class Buscaminas : AppCompatActivity() {
 
         reveal(r, c)
 
-        if (gameOver) return
-        if (checkWin()) {
+        if (!gameOver && checkWin()) {
             gameOver = true
             disableAll()
             Toast.makeText(this, "🎉 ¡Has ganado!", Toast.LENGTH_LONG).show()
         }
     }
 
-    /** Alterna bandera (usado por tap corto en modo bandera y por long-press). */
     private fun toggleFlag(r: Int, c: Int) {
         if (gameOver) return
         if (revealed[r][c]) return
@@ -187,7 +191,6 @@ class Buscaminas : AppCompatActivity() {
     private fun reveal(sr: Int, sc: Int) {
         if (revealed[sr][sc] || flagged[sr][sc]) return
 
-        // Si es mina: fin del juego
         if (isMine[sr][sc]) {
             showAllMines()
             gameOver = true
@@ -196,7 +199,6 @@ class Buscaminas : AppCompatActivity() {
             return
         }
 
-        // BFS para abrir zona vacía
         val queue = ArrayDeque<Pair<Int, Int>>()
         queue.add(sr to sc)
         val seen = HashSet<Pair<Int, Int>>()
@@ -217,7 +219,6 @@ class Buscaminas : AppCompatActivity() {
                     setNumberColor(b, n)
                 } else {
                     b.text = ""
-                    // expandir vecinos si no hay minas alrededor
                     for (nr in (r - 1)..(r + 1)) {
                         for (nc in (c - 1)..(c + 1)) {
                             if (nr == r && nc == c) continue
@@ -266,7 +267,6 @@ class Buscaminas : AppCompatActivity() {
     }
 
     private fun checkWin(): Boolean {
-        // Ganar = todas las celdas no-mina reveladas
         for (r in 0 until rows) {
             for (c in 0 until cols) {
                 if (!isMine[r][c] && !revealed[r][c]) return false
