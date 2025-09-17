@@ -5,15 +5,17 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.bumptech.glide.Glide
 import com.example.proyecto_final.Juegos.MemoramaActivity
 import com.example.proyecto_final.Juegos.Snake
 import com.example.proyecto_final.Juegos.SudokuActivity
-import com.example.proyecto_final.Juegos.Buscaminas
 import com.example.proyecto_final.utils.SessionManager
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -26,7 +28,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sessionManager: SessionManager
     private lateinit var exoPlayer: ExoPlayer
     private lateinit var exoPlayerMemorama: ExoPlayer
-    private lateinit var exoPlayerSudoku: ExoPlayer
     private lateinit var exoPlayerBuscaMinas: ExoPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,19 +92,15 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Configurar tercer ExoPlayer para el video de Sudoku
-        val playerViewSudoku = findViewById<PlayerView>(R.id.videoButtonSudoku)
-        exoPlayerSudoku = ExoPlayer.Builder(this).build()
-        playerViewSudoku.player = exoPlayerSudoku
-        val rawUriSudoku = Uri.parse("android.resource://" + packageName + "/" + R.raw.prueba_para_juego)
-        val mediaItemSudoku = MediaItem.fromUri(rawUriSudoku)
-        exoPlayerSudoku.setMediaItem(mediaItemSudoku)
-        exoPlayerSudoku.prepare()
+        // Usar GIF para Sudoku: cargar en ImageView y mostrar botón al click
+        val imageSudoku = findViewById<ImageView>(R.id.imageSudoku)
+        // asegurar visible
+        imageSudoku.visibility = View.VISIBLE
+        // cargar vía Uri (más fiable en algunos dispositivos)
+        val sudokuUri = Uri.parse("android.resource://" + packageName + "/raw/sudoku")
+        Glide.with(this).asGif().load(sudokuUri).into(imageSudoku)
         val btnPlaySudoku = findViewById<Button>(R.id.btnPlaySudoku)
-        playerViewSudoku.setOnClickListener {
-            if (!exoPlayerSudoku.isPlaying) {
-                exoPlayerSudoku.play()
-            }
+        imageSudoku.setOnClickListener {
             btnPlaySudoku.visibility = View.VISIBLE
         }
         btnPlaySudoku.setOnClickListener {
@@ -127,7 +124,10 @@ class MainActivity : AppCompatActivity() {
             btnPlayBuscaMinas.visibility = View.VISIBLE
         }
         btnPlayBuscaMinas.setOnClickListener {
-            val intent = Intent(this, Buscaminas::class.java)
+            // Iniciar actividad Buscaminas por nombre completo para evitar referencia directa que fallaba
+            val className = "com.example.proyecto_final.Juegos.Buscaminas"
+            val intent = Intent()
+            intent.setClassName(packageName, className)
             startActivity(intent)
         }
     }
@@ -159,9 +159,6 @@ class MainActivity : AppCompatActivity() {
         }
         if (::exoPlayerMemorama.isInitialized) {
             exoPlayerMemorama.release()
-        }
-        if (::exoPlayerSudoku.isInitialized) {
-            exoPlayerSudoku.release()
         }
         if (::exoPlayerBuscaMinas.isInitialized) {
             exoPlayerBuscaMinas.release()

@@ -1,4 +1,4 @@
-package com.example.buscaminas
+package com.example.proyecto_final.Juegos
 
 import android.content.Intent
 import android.graphics.Typeface
@@ -12,8 +12,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlin.random.Random
-import com.example.proyecto_final.MainActivity
 import com.example.proyecto_final.R
+import com.example.proyecto_final.MainActivity
 
 class Buscaminas : AppCompatActivity() {
 
@@ -355,7 +355,7 @@ class Buscaminas : AppCompatActivity() {
 
     private fun updateMinesCounter() {
         val remaining = (totalMines - flagsPlaced).coerceAtLeast(0)
-        tvMines.text = "💣 $remaining"
+        tvMines.text = getString(R.string.mines_remaining, remaining)
     }
 
     private fun dp(value: Int): Int {

@@ -96,16 +96,21 @@
         android:layout_marginTop="8dp" />
 
     <!-- Tercer PlayerView para Sudoku -->
-    <com.google.android.exoplayer2.ui.PlayerView
-        android:id="@+id/videoButtonSudoku"
+    <!-- ImageView para mostrar GIF de Sudoku -->
+    <ImageView
+        android:id="@+id/imageSudoku"
         android:layout_width="150dp"
         android:layout_height="0dp"
+        android:visibility="visible"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:background="@android:color/darker_gray"
         app:layout_constraintTop_toBottomOf="@+id/btnPlayMemorama"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintDimensionRatio="16:9"
         android:layout_marginTop="20dp"
-        app:use_controller="false" />
+        android:contentDescription="GIF Sudoku" />
 
     <!-- Botón para iniciar Sudoku, inicialmente invisible -->
     <Button
@@ -114,9 +119,9 @@
         android:layout_height="wrap_content"
         android:text="Jugar Sudoku"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/videoButtonSudoku"
-        app:layout_constraintStart_toStartOf="@+id/videoButtonSudoku"
-        app:layout_constraintEnd_toEndOf="@+id/videoButtonSudoku"
+        app:layout_constraintTop_toBottomOf="@+id/imageSudoku"
+        app:layout_constraintStart_toStartOf="@+id/imageSudoku"
+        app:layout_constraintEnd_toEndOf="@+id/imageSudoku"
         android:layout_marginTop="8dp" />
 
     <!-- Cuarto PlayerView para BuscaMinas -->
