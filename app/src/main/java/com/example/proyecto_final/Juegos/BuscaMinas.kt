@@ -75,6 +75,7 @@ class Buscaminas : AppCompatActivity() {
     // ===== Música de fondo =====
     private fun prepareMusic() {
         if (mediaPlayer == null) {
+            // usar el mp3 actualizado para Buscaminas
             mediaPlayer = MediaPlayer.create(this, R.raw.buscaminas).apply {
                 isLooping = true
                 setVolume(0.6f, 0.6f) // ajusta a tu gusto

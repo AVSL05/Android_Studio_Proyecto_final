@@ -13,22 +13,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
+import com.example.proyecto_final.Juegos.Buscaminas
 import com.example.proyecto_final.Juegos.MemoramaActivity
 import com.example.proyecto_final.Juegos.Snake
 import com.example.proyecto_final.Juegos.SudokuActivity
 import com.example.proyecto_final.utils.SessionManager
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.ui.PlayerView
 
 // Actividad principal que muestra información del usuario y permite cerrar sesión
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var sessionManager: SessionManager
-    private lateinit var exoPlayer: ExoPlayer
-    private lateinit var exoPlayerMemorama: ExoPlayer
-    private lateinit var exoPlayerBuscaMinas: ExoPlayer
+    // exoPlayerBuscaMinas removed; usamos GIF for BuscaMinas
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,41 +48,22 @@ class MainActivity : AppCompatActivity() {
         setupUserInfo()
         setupLogoutButton()
 
-        // Configurar ExoPlayer para el video de Snake
-        val playerView = findViewById<PlayerView>(R.id.videoButton)
-        exoPlayer = ExoPlayer.Builder(this).build()
-        playerView.player = exoPlayer
-        val rawUri = Uri.parse("android.resource://" + packageName + "/" + R.raw.prueba_para_juego)
-        val mediaItem = MediaItem.fromUri(rawUri)
-        exoPlayer.setMediaItem(mediaItem)
-        exoPlayer.prepare()
+        // Cargar GIFs para Snake y Memorama (ImageView)
+        val imageSnake = findViewById<ImageView>(R.id.imageSnake)
+        val snakeUri = Uri.parse("android.resource://" + packageName + "/raw/snake")
+        Glide.with(this).asGif().load(snakeUri).into(imageSnake)
         val btnPlaySnake = findViewById<Button>(R.id.btnPlaySnake)
-        playerView.setOnClickListener {
-            if (!exoPlayer.isPlaying) {
-                exoPlayer.play()
-            }
-            btnPlaySnake.visibility = View.VISIBLE
-        }
+        imageSnake.setOnClickListener { btnPlaySnake.visibility = View.VISIBLE }
         btnPlaySnake.setOnClickListener {
             val intent = Intent(this, Snake::class.java)
             startActivity(intent)
         }
 
-        // Configurar segundo ExoPlayer para el video de Memorama
-        val playerViewMemorama = findViewById<PlayerView>(R.id.videoButtonMemorama)
-        exoPlayerMemorama = ExoPlayer.Builder(this).build()
-        playerViewMemorama.player = exoPlayerMemorama
-        val rawUriMemorama = Uri.parse("android.resource://" + packageName + "/" + R.raw.prueba_para_juego)
-        val mediaItemMemorama = MediaItem.fromUri(rawUriMemorama)
-        exoPlayerMemorama.setMediaItem(mediaItemMemorama)
-        exoPlayerMemorama.prepare()
+        val imageMemorama = findViewById<ImageView>(R.id.imageMemorama)
+        val memoramaUri = Uri.parse("android.resource://" + packageName + "/raw/memorama")
+        Glide.with(this).asGif().load(memoramaUri).into(imageMemorama)
         val btnPlayMemorama = findViewById<Button>(R.id.btnPlayMemorama)
-        playerViewMemorama.setOnClickListener {
-            if (!exoPlayerMemorama.isPlaying) {
-                exoPlayerMemorama.play()
-            }
-            btnPlayMemorama.visibility = View.VISIBLE
-        }
+        imageMemorama.setOnClickListener { btnPlayMemorama.visibility = View.VISIBLE }
         btnPlayMemorama.setOnClickListener {
             val intent = Intent(this, MemoramaActivity::class.java)
             startActivity(intent)
@@ -108,26 +85,15 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Configurar cuarto ExoPlayer para el video de BuscaMinas
-        val playerViewBuscaMinas = findViewById<PlayerView>(R.id.videoButtonBuscaMinas)
-        exoPlayerBuscaMinas = ExoPlayer.Builder(this).build()
-        playerViewBuscaMinas.player = exoPlayerBuscaMinas
-        val rawUriBuscaMinas = Uri.parse("android.resource://" + packageName + "/" + R.raw.prueba_para_juego)
-        val mediaItemBuscaMinas = MediaItem.fromUri(rawUriBuscaMinas)
-        exoPlayerBuscaMinas.setMediaItem(mediaItemBuscaMinas)
-        exoPlayerBuscaMinas.prepare()
+        // Cargar GIF para BuscaMinas y abrir la actividad
+        val imageBuscaMinas = findViewById<ImageView>(R.id.imageBuscaMinas)
+        // se renombró el gif a buscaminas_anim.gif para evitar conflicto con buscaminas.mp3
+        val buscaminasUri = Uri.parse("android.resource://" + packageName + "/raw/buscaminas_anim")
+        Glide.with(this).asGif().load(buscaminasUri).into(imageBuscaMinas)
         val btnPlayBuscaMinas = findViewById<Button>(R.id.btnPlayBuscaMinas)
-        playerViewBuscaMinas.setOnClickListener {
-            if (!exoPlayerBuscaMinas.isPlaying) {
-                exoPlayerBuscaMinas.play()
-            }
-            btnPlayBuscaMinas.visibility = View.VISIBLE
-        }
+        imageBuscaMinas.setOnClickListener { btnPlayBuscaMinas.visibility = View.VISIBLE }
         btnPlayBuscaMinas.setOnClickListener {
-            // Iniciar actividad Buscaminas por nombre completo para evitar referencia directa que fallaba
-            val className = "com.example.proyecto_final.Juegos.Buscaminas"
-            val intent = Intent()
-            intent.setClassName(packageName, className)
+            val intent = Intent(this, Buscaminas::class.java)
             startActivity(intent)
         }
     }
@@ -154,14 +120,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (::exoPlayer.isInitialized) {
-            exoPlayer.release()
-        }
-        if (::exoPlayerMemorama.isInitialized) {
-            exoPlayerMemorama.release()
-        }
-        if (::exoPlayerBuscaMinas.isInitialized) {
-            exoPlayerBuscaMinas.release()
-        }
+        // No ExoPlayer instances to release for Snake/Memorama/BuscaMinas (usamos GIFs)
     }
 }

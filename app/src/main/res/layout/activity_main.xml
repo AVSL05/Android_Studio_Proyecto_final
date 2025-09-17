@@ -48,16 +48,21 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <!-- PlayerView de ExoPlayer para mostrar el video, con ancho fijo y altura automática según la relación de aspecto -->
-    <com.google.android.exoplayer2.ui.PlayerView
-        android:id="@+id/videoButton"
+    <!-- ImageView para mostrar GIF de Snake -->
+    <ImageView
+        android:id="@+id/imageSnake"
         android:layout_width="150dp"
         android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:background="@android:color/darker_gray"
         app:layout_constraintTop_toBottomOf="@+id/tvDescription"
+        app:layout_constraintBottom_toTopOf="@+id/btnPlaySnake"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintDimensionRatio="16:9"
         android:layout_marginTop="20dp"
-        app:use_controller="false" />
+        android:contentDescription="GIF Snake" />
 
     <!-- Botón para iniciar el juego, inicialmente invisible -->
     <Button
@@ -66,22 +71,27 @@
         android:layout_height="wrap_content"
         android:text="Jugar Snake"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/videoButton"
-        app:layout_constraintStart_toStartOf="@+id/videoButton"
-        app:layout_constraintEnd_toEndOf="@+id/videoButton"
+        app:layout_constraintTop_toBottomOf="@+id/imageSnake"
+        app:layout_constraintStart_toStartOf="@+id/imageSnake"
+        app:layout_constraintEnd_toEndOf="@+id/imageSnake"
         android:layout_marginTop="8dp" />
 
     <!-- Segundo PlayerView para memorama -->
-    <com.google.android.exoplayer2.ui.PlayerView
-        android:id="@+id/videoButtonMemorama"
+    <!-- ImageView para mostrar GIF de Memorama -->
+    <ImageView
+        android:id="@+id/imageMemorama"
         android:layout_width="150dp"
         android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:background="@android:color/darker_gray"
         app:layout_constraintTop_toBottomOf="@+id/btnPlaySnake"
+        app:layout_constraintBottom_toTopOf="@+id/btnPlayMemorama"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintDimensionRatio="16:9"
         android:layout_marginTop="20dp"
-        app:use_controller="false" />
+        android:contentDescription="GIF Memorama" />
 
     <!-- Botón para iniciar Memorama, inicialmente invisible -->
     <Button
@@ -90,9 +100,9 @@
         android:layout_height="wrap_content"
         android:text="Jugar Memorama"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/videoButtonMemorama"
-        app:layout_constraintStart_toStartOf="@+id/videoButtonMemorama"
-        app:layout_constraintEnd_toEndOf="@+id/videoButtonMemorama"
+        app:layout_constraintTop_toBottomOf="@+id/imageMemorama"
+        app:layout_constraintStart_toStartOf="@+id/imageMemorama"
+        app:layout_constraintEnd_toEndOf="@+id/imageMemorama"
         android:layout_marginTop="8dp" />
 
     <!-- Tercer PlayerView para Sudoku -->
@@ -125,16 +135,21 @@
         android:layout_marginTop="8dp" />
 
     <!-- Cuarto PlayerView para BuscaMinas -->
-    <com.google.android.exoplayer2.ui.PlayerView
-        android:id="@+id/videoButtonBuscaMinas"
+    <!-- ImageView para mostrar GIF de BuscaMinas -->
+    <ImageView
+        android:id="@+id/imageBuscaMinas"
         android:layout_width="150dp"
         android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:background="@android:color/darker_gray"
         app:layout_constraintTop_toBottomOf="@+id/btnPlaySudoku"
+        app:layout_constraintBottom_toTopOf="@+id/btnPlayBuscaMinas"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintHorizontal_bias="0.2"
         app:layout_constraintDimensionRatio="16:9"
         android:layout_marginTop="20dp"
-        app:use_controller="false" />
+        android:contentDescription="GIF BuscaMinas" />
 
     <!-- Botón para iniciar BuscaMinas, inicialmente invisible -->
     <Button
@@ -143,9 +158,9 @@
         android:layout_height="wrap_content"
         android:text="Jugar BuscaMinas"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/videoButtonBuscaMinas"
-        app:layout_constraintStart_toStartOf="@+id/videoButtonBuscaMinas"
-        app:layout_constraintEnd_toEndOf="@+id/videoButtonBuscaMinas"
+        app:layout_constraintTop_toBottomOf="@+id/imageBuscaMinas"
+        app:layout_constraintStart_toStartOf="@+id/imageBuscaMinas"
+        app:layout_constraintEnd_toEndOf="@+id/imageBuscaMinas"
         android:layout_marginTop="8dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
