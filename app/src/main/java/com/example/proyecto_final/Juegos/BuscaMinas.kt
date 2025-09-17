@@ -1,7 +1,8 @@
-package com.example.proyecto_final.Juegos
+package com.example.buscaminas
 
 import android.content.Intent
 import android.graphics.Typeface
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.Button
@@ -10,8 +11,8 @@ import android.widget.GridLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.proyecto_final.MainActivity
 import kotlin.random.Random
+import com.example.proyecto_final.MainActivity
 import com.example.proyecto_final.R
 
 class Buscaminas : AppCompatActivity() {
@@ -21,6 +22,10 @@ class Buscaminas : AppCompatActivity() {
     private lateinit var btnNewGame: Button
     private lateinit var cbFlagMode: CheckBox
     private lateinit var btnExitBuscaminas: Button
+
+    // Música
+    private var mediaPlayer: MediaPlayer? = null
+    private var shouldResumeMusic = false
 
     private val rows = 9
     private val cols = 9
@@ -54,10 +59,9 @@ class Buscaminas : AppCompatActivity() {
             ).show()
         }
 
-        // Botón salir
-        // Configurar botón de salir
-        val btnExitMemorama = findViewById<Button>(R.id.btnExitBuscaminas)
-        btnExitMemorama.setOnClickListener {
+        // Botón salir: regresa a MainActivity y cierra esta
+        btnExitBuscaminas.setOnClickListener {
+            stopAndReleaseMusic()
             val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
@@ -68,7 +72,69 @@ class Buscaminas : AppCompatActivity() {
         newGame()
     }
 
+    // ===== Música de fondo =====
+    private fun prepareMusic() {
+        if (mediaPlayer == null) {
+            mediaPlayer = MediaPlayer.create(this, R.raw.snake).apply {
+                isLooping = true
+                setVolume(0.6f, 0.6f) // ajusta a tu gusto
+            }
+        }
+    }
+
+    private fun startMusic() {
+        prepareMusic()
+        if (mediaPlayer?.isPlaying == false) {
+            mediaPlayer?.start()
+        }
+    }
+
+    private fun pauseMusic() {
+        mediaPlayer?.let {
+            if (it.isPlaying) {
+                it.pause()
+                shouldResumeMusic = true
+            } else {
+                shouldResumeMusic = false
+            }
+        }
+    }
+
+    private fun stopAndReleaseMusic() {
+        mediaPlayer?.stop()
+        mediaPlayer?.release()
+        mediaPlayer = null
+        shouldResumeMusic = false
+    }
+
+    override fun onStart() {
+        super.onStart()
+        startMusic()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Pausa al ir a segundo plano o cambiar de actividad
+        pauseMusic()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Si venimos de pausa y estaba reproduciendo, reanudar
+        if (shouldResumeMusic) {
+            mediaPlayer?.start()
+            shouldResumeMusic = false
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopAndReleaseMusic()
+    }
+    // ===== Fin música =====
+
     private fun setupBoardViews() {
+        // Crear botones solo una vez, y reutilizarlos al reiniciar partida
         buttons = Array(rows) { r ->
             Array(cols) { c ->
                 Button(this).apply {
@@ -82,7 +148,7 @@ class Buscaminas : AppCompatActivity() {
                     gravity = Gravity.CENTER
                     textSize = 16f
                     typeface = Typeface.DEFAULT_BOLD
-
+                    // TAP corto: revela o bandera según modo
                     setOnClickListener {
                         if (cbFlagMode.isChecked) {
                             toggleFlag(r, c)
@@ -90,6 +156,7 @@ class Buscaminas : AppCompatActivity() {
                             onCellClick(r, c)
                         }
                     }
+                    // TAP largo: siempre alterna bandera
                     setOnLongClickListener {
                         toggleFlag(r, c)
                         true
@@ -111,6 +178,7 @@ class Buscaminas : AppCompatActivity() {
         revealed = Array(rows) { BooleanArray(cols) }
         flagged = Array(rows) { BooleanArray(cols) }
 
+        // reset visual
         for (r in 0 until rows) {
             for (c in 0 until cols) {
                 val b = buttons[r][c]
@@ -119,11 +187,13 @@ class Buscaminas : AppCompatActivity() {
                 b.isSelected = false
             }
         }
+
         updateMinesCounter()
     }
 
     private fun placeMines(excludeR: Int, excludeC: Int) {
         var placed = 0
+        // evita que la primera celda tocada sea mina
         while (placed < totalMines) {
             val r = Random.nextInt(rows)
             val c = Random.nextInt(cols)
@@ -168,7 +238,8 @@ class Buscaminas : AppCompatActivity() {
 
         reveal(r, c)
 
-        if (!gameOver && checkWin()) {
+        if (gameOver) return
+        if (checkWin()) {
             gameOver = true
             disableAll()
             Toast.makeText(this, "🎉 ¡Has ganado!", Toast.LENGTH_LONG).show()
@@ -194,6 +265,7 @@ class Buscaminas : AppCompatActivity() {
     private fun reveal(sr: Int, sc: Int) {
         if (revealed[sr][sc] || flagged[sr][sc]) return
 
+        // Si es mina: fin del juego
         if (isMine[sr][sc]) {
             showAllMines()
             gameOver = true
@@ -202,6 +274,7 @@ class Buscaminas : AppCompatActivity() {
             return
         }
 
+        // BFS para abrir zona vacía
         val queue = ArrayDeque<Pair<Int, Int>>()
         queue.add(sr to sc)
         val seen = HashSet<Pair<Int, Int>>()
@@ -222,6 +295,7 @@ class Buscaminas : AppCompatActivity() {
                     setNumberColor(b, n)
                 } else {
                     b.text = ""
+                    // expandir vecinos si no hay minas alrededor
                     for (nr in (r - 1)..(r + 1)) {
                         for (nc in (c - 1)..(c + 1)) {
                             if (nr == r && nc == c) continue
@@ -270,6 +344,7 @@ class Buscaminas : AppCompatActivity() {
     }
 
     private fun checkWin(): Boolean {
+        // Ganar = todas las celdas no-mina reveladas
         for (r in 0 until rows) {
             for (c in 0 until cols) {
                 if (!isMine[r][c] && !revealed[r][c]) return false
