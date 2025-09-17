@@ -10,6 +10,7 @@ import android.widget.GridLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.proyecto_final.MainActivity
 import kotlin.random.Random
 import com.example.proyecto_final.R
 
@@ -54,9 +55,10 @@ class Buscaminas : AppCompatActivity() {
         }
 
         // Botón salir
-        val btnExitBuscaminas = findViewById<Button>(R.id.btnExitBuscaminas)
-        btnExitBuscaminas.setOnClickListener {
-            val intent = Intent(this, Buscaminas::class.java)
+        // Configurar botón de salir
+        val btnExitMemorama = findViewById<Button>(R.id.btnExitBuscaminas)
+        btnExitMemorama.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
             finish()
