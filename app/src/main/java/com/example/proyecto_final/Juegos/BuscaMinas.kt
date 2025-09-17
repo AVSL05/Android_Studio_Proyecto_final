@@ -75,7 +75,7 @@ class Buscaminas : AppCompatActivity() {
     // ===== Música de fondo =====
     private fun prepareMusic() {
         if (mediaPlayer == null) {
-            mediaPlayer = MediaPlayer.create(this, R.raw.snake).apply {
+            mediaPlayer = MediaPlayer.create(this, R.raw.buscaminas).apply {
                 isLooping = true
                 setVolume(0.6f, 0.6f) // ajusta a tu gusto
             }
