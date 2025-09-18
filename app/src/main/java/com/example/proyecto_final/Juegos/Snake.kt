@@ -4,49 +4,55 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.RelativeLayout
-import android.widget.Toast
-import java.util.*
+import com.example.proyecto_final.MainActivity
+import com.example.proyecto_final.R
 import kotlin.math.pow
 import kotlin.math.sqrt
-import com.example.proyecto_final.R
-import com.example.proyecto_final.MainActivity
+import java.util.Random
 
 class Snake : Activity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_snake)
 
-        // Inicializar vistas
-        val board = findViewById<RelativeLayout>(R.id.board)
-        val border = findViewById<RelativeLayout>(R.id.relativeLayout)
-        val lilu = findViewById<LinearLayout>(R.id.lilu)
-        val upButton = findViewById<Button>(R.id.up)
-        val downButton = findViewById<Button>(R.id.down)
-        val leftButton = findViewById<Button>(R.id.left)
-        val rightButton = findViewById<Button>(R.id.right)
-        val pauseButton = findViewById<Button>(R.id.pause)
+        // --- Referencias del layout (versión Game Boy) ---
+        val board = findViewById<RelativeLayout>(R.id.board)          // “pantalla” negra
+        val upBtn: View   = findViewById(R.id.up)                      // Views invisibles
+        val downBtn: View = findViewById(R.id.down)
+        val leftBtn: View = findViewById(R.id.left)
+        val rightBtn: View = findViewById(R.id.right)
+        val pauseBtn: View = findViewById(R.id.pause)
+
         val newgame = findViewById<Button>(R.id.new_game)
-        val resume = findViewById<Button>(R.id.resume)
+        val resume  = findViewById<Button>(R.id.resume)
         val playagain = findViewById<Button>(R.id.playagain)
-        val score = findViewById<Button>(R.id.score)
+        val scoreOverlay = findViewById<Button>(R.id.score)
         val score2 = findViewById<Button>(R.id.score2)
         val btnExitSnake = findViewById<Button>(R.id.btnExitSnake)
-        val meat = ImageView(this)
-        val snake = ImageView(this)
-        val snakeSegments =
-            mutableListOf(snake) // Keep track of the position of each snake segment
-        val handler = Handler()
-        var delayMillis = 30L // Update snake position every 100 milliseconds
-        var currentDirection = "right" // Start moving right by default
-        var scorex = 0
 
-        // Configurar botón de salir del juego
+        // Sprites
+        val meat = ImageView(this)
+        val snakeHead = ImageView(this)
+        val snakeSegments = mutableListOf<ImageView>() // [0] será la cabeza
+
+        // Estado del juego
+        val handler = Handler(Looper.getMainLooper())
+        var delayMillis = 30L           // tick del juego
+        var currentDirection = "right"  // inicio hacia la derecha
+        var scoreValue = 0
+
+        // Límites dinámicos de la “pantalla” (se calculan tras el layout)
+        var halfW = 0f
+        var halfH = 0f
+
+        // --- Salir al menú principal ---
         btnExitSnake.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -54,41 +60,44 @@ class Snake : Activity() {
             finish()
         }
 
-        // Ocultar vistas innecesarias al iniciar el juego
+        // Estado inicial UI
         board.visibility = View.INVISIBLE
         playagain.visibility = View.INVISIBLE
-        score.visibility = View.INVISIBLE
+        scoreOverlay.visibility = View.INVISIBLE
         score2.visibility = View.INVISIBLE
-        btnExitSnake.visibility = View.VISIBLE
+        newgame.visibility = View.VISIBLE
+        resume.visibility = View.INVISIBLE
+
+        // ---------- NUEVO JUEGO ----------
 
         newgame.setOnClickListener {
 
-
-            // Mostrar el tablero y ocultar los botones de nuevo juego y reanudar
+            // Reset UI
             board.visibility = View.VISIBLE
             newgame.visibility = View.INVISIBLE
             resume.visibility = View.INVISIBLE
             score2.visibility = View.VISIBLE
+            score2.text = "score : 0"
+            scoreOverlay.visibility = View.GONE
+            playagain.visibility = View.GONE
 
+            // Limpia el board por si reiniciaste
+            board.removeAllViews()
+            snakeSegments.clear()
+            scoreValue = 0
+            currentDirection = "right"
+            delayMillis = 30L
 
-            // Configurar la imagen y posición inicial de la serpiente
-            snake.setImageResource(R.drawable.snake)
-            snake.layoutParams = ViewGroup.LayoutParams(
+            // Crea cabeza
+            snakeHead.setImageResource(R.drawable.snake)
+            snakeHead.layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
-            board.addView(snake)
-            snakeSegments.add(snake) // Add the new snake segment to the list
+            board.addView(snakeHead)
+            snakeSegments.add(snakeHead)
 
-
-            var snakeX = snake.x
-            var snakeY = snake.y
-
-
-
-
-
-
+            // Crea comida
             meat.setImageResource(R.drawable.meat)
             meat.layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -96,199 +105,154 @@ class Snake : Activity() {
             )
             board.addView(meat)
 
-            val random = Random() // create a Random object
-            val randomX =
-                random.nextInt(801) - 400 // generate a random x-coordinate between -400 and 400
-            val randomY =
-                random.nextInt(801) - 400 // generate a random y-coordinate between -400 and 400
+            // Cuando el board ya tenga tamaño, centra y calcula límites
+            board.post {
+                // Límites para usar translationX/Y con el sprite centrado
+                halfW = (board.width  - snakeHead.width) / 2f
+                halfH = (board.height - snakeHead.height) / 2f
 
+                // Centra cabeza
+                var snakeX = 0f
+                var snakeY = 0f
+                snakeHead.translationX = snakeX
+                snakeHead.translationY = snakeY
 
-            meat.x = randomX.toFloat()
-            meat.y = randomY.toFloat()
-
-
-
-
-
-
-
-
-
-
-            fun checkFoodCollision() {
-                val distanceThreshold = 50
-
-                val distance = sqrt((snake.x - meat.x).pow(2) + (snake.y - meat.y).pow(2))
-
-                if (distance < distanceThreshold) { // Check if the distance between the snake head and the meat is less than the threshold
-
-                    val newSnake =
-                        ImageView(this) // Create a new ImageView for the additional snake segment
-                    newSnake.setImageResource(R.drawable.snake)
-                    newSnake.layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                    )
-                    board.addView(newSnake)
-
-                    snakeSegments.add(newSnake) // Add the new snake segment to the list
-
-                    val randomX =
-                        random.nextInt(801) - -100
-                    val randomY =
-                        random.nextInt(801) - -100
-
-
-                    meat.x = randomX.toFloat()
-                    meat.y = randomY.toFloat()
-
-
-                    delayMillis-- // Reduce delay value by 1
-                    scorex++
-
-                    score2.text =   "score : " + scorex.toString() // Update delay text view
-
-
-
+                // Coloca comida en lugar aleatorio dentro de los límites
+                fun dropFood() {
+                    val rnd = Random()
+                    val mx = (halfW - meat.width / 2f - 8f).coerceAtLeast(8f)
+                    val my = (halfH - meat.height / 2f - 8f).coerceAtLeast(8f)
+                    val rx = -mx + rnd.nextFloat() * (2f * mx)
+                    val ry = -my + rnd.nextFloat() * (2f * my)
+                    meat.translationX = rx
+                    meat.translationY = ry
                 }
-            }
 
+                dropFood()
 
+                fun checkFoodCollision() {
+                    val dx = snakeHead.translationX - meat.translationX
+                    val dy = snakeHead.translationY - meat.translationY
+                    val distance = sqrt(dx*dx + dy*dy)
+                    val threshold = (snakeHead.width.coerceAtLeast(snakeHead.height)) * 0.8f
 
+                    if (distance < threshold) {
+                        // Agrega un segmento nuevo detrás de la cabeza
+                        val seg = ImageView(this)
+                        seg.setImageResource(R.drawable.snake)
+                        seg.layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                        )
+                        seg.translationX = snakeSegments.last().translationX
+                        seg.translationY = snakeSegments.last().translationY
+                        board.addView(seg)
+                        snakeSegments.add(seg)
 
-            val runnable = object : Runnable {
-                override fun run() {
+                        dropFood()
 
-                    for (i in snakeSegments.size - 1 downTo 1) { // Update the position of each snake segment except for the head
-                        snakeSegments[i].x = snakeSegments[i - 1].x
-                        snakeSegments[i].y = snakeSegments[i - 1].y
+                        // Sube score y acelera leve
+                        scoreValue++
+                        score2.text = "score : $scoreValue"
+                        if (delayMillis > 6) delayMillis -= 1
                     }
+                }
 
+                fun gameOver() {
+                    currentDirection = "pause"
+                    scoreOverlay.text = "your score is  $scoreValue"
+                    scoreOverlay.visibility = View.VISIBLE
+                    score2.visibility = View.INVISIBLE
+                    playagain.visibility = View.VISIBLE
+                }
 
-                    when (currentDirection) {
-                        "up" -> {
-                            snakeY -= 10
-                            if (snakeY < -490) { // Check if the ImageView goes off the top of the board
-                                snakeY = -490f
-                                border.setBackgroundColor(getResources().getColor(R.color.red))
-                                playagain.visibility = View.VISIBLE
-                                currentDirection = "pause"
-                                lilu.visibility = View.INVISIBLE
+                val speed = 10f
 
-                                score.text =   "your score is  " + scorex.toString() // Update delay text view
-                                score.visibility = View.VISIBLE
-                                score2.visibility = View.INVISIBLE
+                val runnable = object : Runnable {
+                    override fun run() {
 
-
-
-                            }
-
-                            snake.translationY = snakeY
-                        }
-                        "down" -> {
-                            snakeY += 10
-                            val maxY =
-                                board.height / 2 - snake.height + 30 // Calculate the maximum y coordinate
-                            if (snakeY > maxY) { // Check if the ImageView goes off the bottom of the board
-                                snakeY = maxY.toFloat()
-                                border.setBackgroundColor(getResources().getColor(R.color.red))
-                                playagain.visibility = View.VISIBLE
-                                currentDirection = "pause"
-                                lilu.visibility = View.INVISIBLE
-
-                                score.text =   "your score is  " + scorex.toString() // Update delay text view
-                                score.visibility = View.VISIBLE
-                                score2.visibility = View.INVISIBLE
-
-
-                            }
-                            snake.translationY = snakeY
-                        }
-                        "left" -> {
-                            snakeX -= 10
-                            if (snakeX < -490) { // Check if the ImageView goes off the top of the board
-                                snakeX = -490f
-                                border.setBackgroundColor(getResources().getColor(R.color.red))
-                                playagain.visibility = View.VISIBLE
-                                currentDirection = "pause"
-                                lilu.visibility = View.INVISIBLE
-                                score.text =   "your score is  " + scorex.toString() // Update delay text view
-                                score.visibility = View.VISIBLE
-                                score2.visibility = View.INVISIBLE
-
-
-
-                            }
-                            snake.translationX = snakeX
-                        }
-                        "right" -> {
-                            snakeX += 10
-                            val maxX =
-                                board.height / 2 - snake.height + 30 // Calculate the maximum y coordinate
-                            if (snakeX > maxX) { // Check if the ImageView goes off the bottom of the board
-                                snakeX = maxX.toFloat()
-                                border.setBackgroundColor(getResources().getColor(R.color.red))
-                                playagain.visibility = View.VISIBLE
-                                currentDirection = "pause"
-                                lilu.visibility = View.INVISIBLE
-
-                                score.text =   "your score is  " + scorex.toString() // Update delay text view
-                                score.visibility = View.VISIBLE
-                                score2.visibility = View.INVISIBLE
-
-
-                            }
-                            snake.translationX = snakeX
+                        // Mover cuerpo: de la cola hacia la cabeza
+                        for (i in snakeSegments.size - 1 downTo 1) {
+                            snakeSegments[i].translationX = snakeSegments[i - 1].translationX
+                            snakeSegments[i].translationY = snakeSegments[i - 1].translationY
                         }
 
-                        "pause" -> {
-                            snakeX += 0
-                            snake.translationX = snakeX
+                        when (currentDirection) {
+                            "up" -> {
+                                snakeY -= speed
+                                if (snakeY < -halfH) {
+                                    snakeY = -halfH
+                                    gameOver()
+                                }
+                                snakeHead.translationY = snakeY
+                            }
+                            "down" -> {
+                                snakeY += speed
+                                if (snakeY > halfH) {
+                                    snakeY = halfH
+                                    gameOver()
+                                }
+                                snakeHead.translationY = snakeY
+                            }
+                            "left" -> {
+                                snakeX -= speed
+                                if (snakeX < -halfW) {
+                                    snakeX = -halfW
+                                    gameOver()
+                                }
+                                snakeHead.translationX = snakeX
+                            }
+                            "right" -> {
+                                snakeX += speed
+                                if (snakeX > halfW) {
+                                    snakeX = halfW
+                                    gameOver()
+                                }
+                                snakeHead.translationX = snakeX
+                            }
+                            "pause" -> { /* no-op */ }
+                        }
+
+                        if (currentDirection != "pause") {
+                            checkFoodCollision()
+                            handler.postDelayed(this, delayMillis)
                         }
                     }
-
-                    checkFoodCollision()
-                    handler.postDelayed(this, delayMillis)
                 }
-            }
 
-            handler.postDelayed(runnable, delayMillis)
+                handler.postDelayed(runnable, delayMillis)
 
-// Set button onClickListeners to update the currentDirection variable when pressed
-            upButton.setOnClickListener {
-                currentDirection = "up"
-            }
-            downButton.setOnClickListener {
-                currentDirection = "down"
-            }
-            leftButton.setOnClickListener {
-                currentDirection = "left"
-            }
-            rightButton.setOnClickListener {
-                currentDirection = "right"
-            }
-            pauseButton.setOnClickListener {
-                currentDirection = "pause"
-                board.visibility = View.INVISIBLE
-                newgame.visibility = View.VISIBLE
-                resume.visibility = View.VISIBLE
+                // Controles
+                upBtn.setOnClickListener    { if (currentDirection != "down")  currentDirection = "up" }
+                downBtn.setOnClickListener  { if (currentDirection != "up")    currentDirection = "down" }
+                leftBtn.setOnClickListener  { if (currentDirection != "right") currentDirection = "left" }
+                rightBtn.setOnClickListener { if (currentDirection != "left")  currentDirection = "right" }
 
-            }
-            resume.setOnClickListener {
-                currentDirection = "right"
-                board.visibility = View.VISIBLE
-                newgame.visibility = View.INVISIBLE
-                resume.visibility = View.INVISIBLE
+                pauseBtn.setOnClickListener {
+                    if (currentDirection == "pause") {
+                        currentDirection = "right"
+                        board.visibility = View.VISIBLE
+                        newgame.visibility = View.INVISIBLE
+                        resume.visibility = View.INVISIBLE
+                        handler.postDelayed(runnable, delayMillis)
+                    } else {
+                        currentDirection = "pause"
+                        board.visibility = View.INVISIBLE
+                        newgame.visibility = View.VISIBLE
+                        resume.visibility = View.VISIBLE
+                    }
+                }
 
-            }
-            playagain.setOnClickListener {
+                resume.setOnClickListener {
+                    currentDirection = "right"
+                    board.visibility = View.VISIBLE
+                    newgame.visibility = View.INVISIBLE
+                    resume.visibility = View.INVISIBLE
+                    handler.postDelayed(runnable, delayMillis)
+                }
 
-                recreate()
-            }
-
-        }
-
-
+                playagain.setOnClickListener { recreate() }
+            } // end board.post { ... }
+        } // end newgame.setOnClickListener
     }
-
 }
