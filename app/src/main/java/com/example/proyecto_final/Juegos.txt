@@ -5,7 +5,7 @@ Cartas:
 Clasicos:
 Snake, Buscaminas (Quisiera hacer el snake y buscaminas=
 80´s:
-Tetris, pacman
+Tetris, pacman <--- Escogidos por Andre
 Juegos de agilidad mental:
 Memorama, Sudoku
 Juegos extras que estaria chido poner:
