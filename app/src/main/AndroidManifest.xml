@@ -45,6 +45,10 @@
             android:name=".Juegos.Buscaminas"
             android:exported="false" />
 
+        <activity
+            android:name=".Juegos.TetrisActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

@@ -176,6 +176,9 @@ class TetrisGame {
     /** Forma de la siguiente pieza (para preview en UI) */
     fun getNextShape(): Array<IntArray> = next.shape(0)
 
+    /** Color (id) de la siguiente pieza, para que la UI pinte el preview correctamente */
+    fun getNextColor(): Int = next.color
+
     // -------------------- Internos --------------------
 
     // Limpiar tablero
@@ -326,4 +329,3 @@ class TetrisGame {
         }
     }
 }
-

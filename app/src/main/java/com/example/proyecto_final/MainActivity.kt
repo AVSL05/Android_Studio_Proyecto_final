@@ -19,6 +19,7 @@ import com.example.proyecto_final.Juegos.Snake
 import com.example.proyecto_final.Juegos.SudokuActivity
 import com.example.proyecto_final.utils.SessionManager
 import android.widget.Toast
+import com.example.proyecto_final.Juegos.TetrisActivity // Import de la Activity de Tetris
 
 // Actividad principal que muestra información del usuario y permite cerrar sesión
 
@@ -98,20 +99,17 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // --------- NUEVO: Wiring Tetris (imagen + botón) ---------
-        // Cargar GIF de Tetris si existe en res/raw/tetris (si no existe, Glide simplemente no mostrará animación)
+        // --------- Wiring Tetris (imagen + botón) ---------
         val imageTetris = findViewById<ImageView>(R.id.imageTetris)
         val tetrisUri = Uri.parse("android.resource://" + packageName + "/raw/tetris")
         Glide.with(this).asGif().load(tetrisUri).into(imageTetris)
         val btnPlayTetris = findViewById<Button>(R.id.btnPlayTetris)
 
-        // Mostrar el botón al tocar la imagen (mismo patrón que otros juegos)
         imageTetris.setOnClickListener { btnPlayTetris.visibility = View.VISIBLE }
-
-        // Por ahora mostramos un Toast. En el siguiente paso, lo reemplazamos por Intent hacia TetrisActivity
         btnPlayTetris.setOnClickListener {
-            // TODO: Reemplazar por: startActivity(Intent(this, TetrisActivity::class.java)) cuando esté creada y registrada
-            Toast.makeText(this, "Tetris estará disponible en unos instantes", Toast.LENGTH_SHORT).show()
+            // Abrir la nueva actividad de Tetris
+            val intent = Intent(this, TetrisActivity::class.java)
+            startActivity(intent)
         }
     }
 

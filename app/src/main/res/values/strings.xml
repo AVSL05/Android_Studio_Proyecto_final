@@ -2,4 +2,9 @@
     <string name="app_name">Proyecto_Final</string>
     <string name="clear">Borrar</string>
     <string name="mines_remaining">💣 %1$d</string>
+
+    <!-- Tetris: textos de HUD -->
+    <string name="tetris_score">Puntuación: %1$d</string>
+    <string name="tetris_level">Nivel: %1$d</string>
+    <string name="tetris_lines">Líneas: %1$d</string>
 </resources>
