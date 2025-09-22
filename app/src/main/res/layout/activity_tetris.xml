@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Interfaz del juego Tetris
+  - Panel izquierdo: tablero (View personalizado dentro de un FrameLayout)
+  - Panel derecho: info de juego (puntuación, nivel, líneas) y preview de la siguiente pieza
+  - Parte inferior: controles táctiles (izq, rotar, der, bajar, caída, pausa, salir)
+-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <!-- Contenedor del tablero donde se dibujarán las piezas -->
+    <FrameLayout
+        android:id="@+id/boardContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#111111"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineRight"
+        app:layout_constraintBottom_toTopOf="@+id/controlsContainer" />
+
+    <!-- Guía para reservar espacio al panel de info (~35%) -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.65" />
+
+    <!-- Panel derecho con información del juego y preview -->
+    <LinearLayout
+        android:id="@+id/panelInfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/boardContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/controlsContainer">
+
+        <!-- Puntuación actual -->
+        <TextView
+            android:id="@+id/tvScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Puntuación: 0"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="18sp" />
+
+        <!-- Nivel actual -->
+        <TextView
+            android:id="@+id/tvLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nivel: 1"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:layout_marginTop="6dp" />
+
+        <!-- Líneas completadas -->
+        <TextView
+            android:id="@+id/tvLines"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Líneas: 0"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:layout_marginTop="6dp" />
+
+        <!-- Título del preview -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Siguiente:"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:layout_marginTop="12dp" />
+
+        <!-- Contenedor para la vista previa de la siguiente pieza -->
+        <FrameLayout
+            android:id="@+id/nextContainer"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:background="#222222"
+            android:layout_marginTop="8dp" />
+
+    </LinearLayout>
+
+    <!-- Controles inferiores del juego -->
+    <LinearLayout
+        android:id="@+id/controlsContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- Fila: izquierda - rotar - derecha -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btnLeft"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="◄"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/btnRotate"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:text="⟳"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/btnRight"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="►"
+                android:textAllCaps="false" />
+        </LinearLayout>
+
+        <!-- Fila: bajar suave - caída dura -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="8dp">
+
+            <Button
+                android:id="@+id/btnSoftDrop"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:text="▼"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/btnHardDrop"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="⤓"
+                android:textSize="25dp"
+                android:textAllCaps="false" />
+        </LinearLayout>
+
+        <!-- Fila: pausa - salir -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="8dp">
+
+            <Button
+                android:id="@+id/btnPause"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="Pausa"
+                android:textAllCaps="false" />
+
+            <Button
+                android:id="@+id/btnExit"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="Salir"
+                android:textAllCaps="false" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
