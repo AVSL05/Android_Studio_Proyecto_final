@@ -156,11 +156,38 @@
         android:id="@+id/btnPlayBuscaMinas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
         android:text="Jugar BuscaMinas"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/imageBuscaMinas"
-        app:layout_constraintStart_toStartOf="@+id/imageBuscaMinas"
         app:layout_constraintEnd_toEndOf="@+id/imageBuscaMinas"
+        app:layout_constraintStart_toStartOf="@+id/imageBuscaMinas"
+        app:layout_constraintTop_toBottomOf="@+id/imageBuscaMinas" />
+
+    <!-- Quinto PlayerView para Tetris -->
+    <!-- ImageView para mostrar GIF de Tetris (placeholder) -->
+    <ImageView
+        android:id="@+id/imageTetris"
+        android:layout_width="150dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="52dp"
+        android:adjustViewBounds="true"
+        android:background="@android:color/darker_gray"
+        android:contentDescription="GIF Tetris"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintStart_toEndOf="@+id/imageSnake"
+        app:layout_constraintTop_toTopOf="@+id/imageSnake" />
+
+    <!-- Botón para iniciar Tetris (se mostrará al tocar el GIF) -->
+    <Button
+        android:id="@+id/btnPlayTetris"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Jugar Tetris"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/imageTetris"
+        app:layout_constraintStart_toStartOf="@+id/imageTetris"
+        app:layout_constraintEnd_toEndOf="@+id/imageTetris"
         android:layout_marginTop="8dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
