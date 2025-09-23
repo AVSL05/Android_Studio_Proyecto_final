@@ -2,6 +2,7 @@ package com.example.proyecto_final.Juegos
 
 import android.content.Intent
 import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.Gravity
@@ -10,6 +11,7 @@ import android.widget.CheckBox
 import android.widget.GridLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import kotlin.random.Random
 import com.example.proyecto_final.R
@@ -53,7 +55,8 @@ class Buscaminas : AppCompatActivity() {
 
         btnNewGame.setOnClickListener { newGame() }
         cbFlagMode.setOnCheckedChangeListener { _, isChecked ->
-            Toast.makeText(this,
+            Toast.makeText(
+                this,
                 if (isChecked) "Modo bandera ON" else "Modo bandera OFF",
                 Toast.LENGTH_SHORT
             ).show()
@@ -75,10 +78,9 @@ class Buscaminas : AppCompatActivity() {
     // ===== Música de fondo =====
     private fun prepareMusic() {
         if (mediaPlayer == null) {
-            // usar el mp3 actualizado para Buscaminas
             mediaPlayer = MediaPlayer.create(this, R.raw.buscaminas).apply {
                 isLooping = true
-                setVolume(0.6f, 0.6f) // ajusta a tu gusto
+                setVolume(0.6f, 0.6f)
             }
         }
     }
@@ -115,13 +117,11 @@ class Buscaminas : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        // Pausa al ir a segundo plano o cambiar de actividad
         pauseMusic()
     }
 
     override fun onResume() {
         super.onResume()
-        // Si venimos de pausa y estaba reproduciendo, reanudar
         if (shouldResumeMusic) {
             mediaPlayer?.start()
             shouldResumeMusic = false
@@ -149,6 +149,10 @@ class Buscaminas : AppCompatActivity() {
                     gravity = Gravity.CENTER
                     textSize = 16f
                     typeface = Typeface.DEFAULT_BOLD
+                    isAllCaps = false
+                    // Estado inicial visual: oculta
+                    applyHiddenStyle(this)
+
                     // TAP corto: revela o bandera según modo
                     setOnClickListener {
                         if (cbFlagMode.isChecked) {
@@ -186,6 +190,10 @@ class Buscaminas : AppCompatActivity() {
                 b.isEnabled = true
                 b.text = ""
                 b.isSelected = false
+                flagged[r][c] = false
+                revealed[r][c] = false
+                isMine[r][c] = false
+                applyHiddenStyle(b)
             }
         }
 
@@ -243,7 +251,7 @@ class Buscaminas : AppCompatActivity() {
         if (checkWin()) {
             gameOver = true
             disableAll()
-            Toast.makeText(this, "🎉 ¡Has ganado!", Toast.LENGTH_LONG).show()
+            showWinDialog()
         }
     }
 
@@ -255,9 +263,11 @@ class Buscaminas : AppCompatActivity() {
         val b = buttons[r][c]
         if (flagged[r][c]) {
             b.text = "🚩"
+            applyFlaggedStyle(b)
             flagsPlaced++
         } else {
             b.text = ""
+            applyHiddenStyle(b)
             flagsPlaced--
         }
         updateMinesCounter()
@@ -266,12 +276,12 @@ class Buscaminas : AppCompatActivity() {
     private fun reveal(sr: Int, sc: Int) {
         if (revealed[sr][sc] || flagged[sr][sc]) return
 
-        // Si es mina: fin del juego
+        // Si es mina: fin del juego + diálogo
         if (isMine[sr][sc]) {
             showAllMines()
             gameOver = true
             disableAll()
-            Toast.makeText(this, "💥 ¡Pisaste una mina!", Toast.LENGTH_LONG).show()
+            showGameOverDialog()
             return
         }
 
@@ -294,8 +304,10 @@ class Buscaminas : AppCompatActivity() {
                 if (n > 0) {
                     b.text = n.toString()
                     setNumberColor(b, n)
+                    applyRevealedStyle(b) // revelada con número
                 } else {
                     b.text = ""
+                    applyRevealedStyle(b) // revelada vacía
                     // expandir vecinos si no hay minas alrededor
                     for (nr in (r - 1)..(r + 1)) {
                         for (nc in (c - 1)..(c + 1)) {
@@ -310,16 +322,17 @@ class Buscaminas : AppCompatActivity() {
         }
     }
 
+    // Colores más encendidos para mejor visibilidad
     private fun setNumberColor(b: Button, n: Int) {
         val color = when (n) {
-            1 -> 0xFF1565C0.toInt()
-            2 -> 0xFF2E7D32.toInt()
-            3 -> 0xFFC62828.toInt()
-            4 -> 0xFF4527A0.toInt()
-            5 -> 0xFF6D4C41.toInt()
-            6 -> 0xFF00838F.toInt()
-            7 -> 0xFF424242.toInt()
-            else -> 0xFF000000.toInt()
+            1 -> 0xFF2196F3.toInt() // azul brillante
+            2 -> 0xFF4CAF50.toInt() // verde brillante
+            3 -> 0xFFF44336.toInt() // rojo brillante
+            4 -> 0xFF9C27B0.toInt() // morado vibrante
+            5 -> 0xFFFF9800.toInt() // naranja fuerte
+            6 -> 0xFF00BCD4.toInt() // cyan brillante
+            7 -> 0xFFFFEB3B.toInt() // amarillo intenso
+            else -> 0xFFFFFFFF.toInt() // blanco para 8 u otros
         }
         b.setTextColor(color)
     }
@@ -330,6 +343,7 @@ class Buscaminas : AppCompatActivity() {
                 if (isMine[r][c]) {
                     val b = buttons[r][c]
                     b.text = "💣"
+                    applyMineStyle(b)
                     b.isEnabled = false
                 }
             }
@@ -362,5 +376,86 @@ class Buscaminas : AppCompatActivity() {
     private fun dp(value: Int): Int {
         val scale = resources.displayMetrics.density
         return (value * scale).toInt()
+    }
+
+    // === Diálogo Game Over ===
+    private fun showGameOverDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Game Over")
+            .setMessage("Pisaste una mina 😵")
+            .setCancelable(false)
+            .setPositiveButton("Nuevo juego") { _, _ ->
+                newGame()
+            }
+            .setNegativeButton("Menú principal") { _, _ ->
+                stopAndReleaseMusic()
+                val intent = Intent(this, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                }
+                startActivity(intent)
+                finish()
+            }
+            .show()
+    }
+
+    // === Diálogo de Victoria ===
+    private fun showWinDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("¡Felicidades!")
+            .setMessage("Resolviste el tablero 🎉")
+            .setCancelable(false)
+            .setPositiveButton("Volver a jugar") { _, _ ->
+                newGame()
+            }
+            .setNegativeButton("Menú principal") { _, _ ->
+                stopAndReleaseMusic()
+                val intent = Intent(this, MainActivity::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                }
+                startActivity(intent)
+                finish()
+            }
+            .show()
+    }
+
+    // ====== ESTILOS VISUALES DE LAS CASILLAS ======
+    private fun applyHiddenStyle(b: Button) {
+        b.isEnabled = true
+        b.setTextColor(0xFFFFFFFF.toInt()) // texto blanco por defecto (si tuviera)
+        b.background = cellBg(
+            fill = 0xFF1E1E1E.toInt(),     // gris muy oscuro
+            stroke = 0xFF3A3A3A.toInt()    // borde gris
+        )
+    }
+
+    private fun applyRevealedStyle(b: Button) {
+        b.background = cellBg(
+            fill = 0xFF2C2C2C.toInt(),     // gris medio
+            stroke = 0xFF4A4A4A.toInt()    // borde un poco más claro
+        )
+    }
+
+    private fun applyFlaggedStyle(b: Button) {
+        b.background = cellBg(
+            fill = 0xFF1E1E1E.toInt(),     // igual que oculta
+            stroke = 0xFFFFD54F.toInt()    // borde amarillo para distinguir
+        )
+    }
+
+    private fun applyMineStyle(b: Button) {
+        b.setTextColor(0xFFFFFFFF.toInt())
+        b.background = cellBg(
+            fill = 0xFFD32F2F.toInt(),     // rojo fuerte
+            stroke = 0xFFA00000.toInt()    // borde rojo oscuro
+        )
+    }
+
+    private fun cellBg(fill: Int, stroke: Int): GradientDrawable {
+        return GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = dp(6).toFloat()
+            setColor(fill)
+            setStroke(dp(1), stroke)
+        }
     }
 }
