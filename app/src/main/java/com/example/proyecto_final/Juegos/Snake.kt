@@ -1,9 +1,10 @@
 package com.example.proyecto_final.Juegos
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
-import android.media.MediaPlayer              // musica
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -31,7 +32,7 @@ class Snake : Activity() {
     private val speed = 5f
 
     // --- Música
-    private var mediaPlayer: MediaPlayer? = null     // ⬅️ NUEVO
+    private var mediaPlayer: MediaPlayer? = null
 
     // Colores para el botón B
     private val snakeColors = listOf(Color.GREEN, Color.CYAN, Color.YELLOW, Color.MAGENTA, Color.WHITE)
@@ -46,6 +47,8 @@ class Snake : Activity() {
     private lateinit var btnPlayAgain: Button
     private lateinit var scoreField: EditText
     private lateinit var btnExitSnake: Button
+
+    private lateinit var scoreOverlay: TextView // 👈 score es TextView en el XML
 
     private lateinit var upBtn: View
     private lateinit var downBtn: View
@@ -64,7 +67,6 @@ class Snake : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Layout adaptado
         setContentView(R.layout.activity_snake)
 
         // --- Referencias del layout ---
@@ -75,6 +77,7 @@ class Snake : Activity() {
         btnResume = findViewById(R.id.resume)
         btnPlayAgain = findViewById(R.id.playagain)
         scoreField = findViewById(R.id.scoreField)
+        scoreOverlay = findViewById(R.id.score)           // 👈 TextView
         btnExitSnake = findViewById(R.id.btnExitSnake)
 
         upBtn = findViewById(R.id.up)
@@ -93,7 +96,7 @@ class Snake : Activity() {
 
         // Salir al menú principal
         btnExitSnake.setOnClickListener {
-            stopMusic()  // ⬅️ NUEVO: detener música al salir
+            stopMusic()
             startActivity(Intent(this, MainActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             })
@@ -110,21 +113,8 @@ class Snake : Activity() {
         leftBtn.setOnClickListener  { if (currentDirection != "right") currentDirection = "left" }
         rightBtn.setOnClickListener { if (currentDirection != "left")  currentDirection = "right" }
 
-        // A -> Pausar/Reanudar
-        btnA.setOnClickListener {
-            if (inMenu) return@setOnClickListener
-            if (isGameRunning()) {
-                pauseGame()
-                btnResume.visibility = View.VISIBLE
-                overlay.visibility = View.VISIBLE
-                inMenu = true
-                highlightSelection(-1)
-                btnResume.alpha = 1f
-            } else {
-                resumeGame()
-                hideMenu()
-            }
-        }
+        // A -> Mostrar INSTRUCCIONES
+        btnA.setOnClickListener { showInstructions() }
 
         // B -> Cambiar color serpiente
         btnB.setOnClickListener {
@@ -147,8 +137,8 @@ class Snake : Activity() {
                     return@setOnClickListener
                 }
                 when (selectedIndex) {
-                    0 -> { startNewGame(); hideMenu() }   // ⬅️ aquí inicia la música
-                    1 -> { goToMainMenu() }               // ⬅️ aquí se detiene
+                    0 -> { startNewGame(); hideMenu() }   // inicia música
+                    1 -> { goToMainMenu() }               // detiene música
                 }
             } else {
                 if (!isGameRunning()) startNewGame()
@@ -171,6 +161,9 @@ class Snake : Activity() {
         btnMenu.visibility = View.VISIBLE
         btnResume.visibility = View.GONE
         btnPlayAgain.visibility = View.GONE
+
+        scoreOverlay.visibility = View.GONE // mensaje “Game Over” oculto
+        scoreOverlay.text = "Game Over! Vuelve a Intentarlo"
 
         inMenu = true
         selectedIndex = 0
@@ -210,13 +203,14 @@ class Snake : Activity() {
     // ================== Juego ==================
     private fun startNewGame() {
         // 🔊 Música ON al iniciar juego
-        startMusic()   // ⬅️ NUEVO
+        startMusic()
 
         // Reset UI
         btnResume.visibility = View.GONE
         btnPlayAgain.visibility = View.GONE
         scoreField.visibility = View.VISIBLE
         scoreField.setText("0")
+        scoreOverlay.visibility = View.GONE
 
         board.removeAllViews()
         snakeSegments.clear()
@@ -225,7 +219,6 @@ class Snake : Activity() {
         delayMillis = 30L
 
         // Cabeza
-        // Usa el recurso que tengas: ic_snake (vector/imagen) o snake.png
         snakeHead.setImageResource(R.drawable.ic_snake)
         snakeHead.layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -242,7 +235,7 @@ class Snake : Activity() {
         )
         board.addView(meat)
 
-        // color actual a todos
+        // color actual
         setSnakeColor(snakeColors[colorIdx])
 
         board.post {
@@ -282,9 +275,8 @@ class Snake : Activity() {
                     seg.translationY = snakeSegments.last().translationY
                     board.addView(seg)
                     snakeSegments.add(seg)
-                    // color al nuevo segmento
-                    setSnakeColor(snakeColors[colorIdx])
 
+                    setSnakeColor(snakeColors[colorIdx])
                     dropFood()
 
                     scoreValue++
@@ -349,13 +341,11 @@ class Snake : Activity() {
     private fun gameOver() {
         currentDirection = "pause"
 
-        val scoreLabel: TextView = findViewById(R.id.score)
-
         overlay.visibility = View.VISIBLE
         board.visibility = View.VISIBLE // deja el tablero detrás
 
-        scoreLabel.visibility = View.VISIBLE
-        scoreLabel.text = "Game Over! Vuelve a Intentarlo\nPuntuación: $scoreValue"
+        scoreOverlay.visibility = View.VISIBLE
+        scoreOverlay.text = "Game Over! Vuelve a Intentarlo\nPuntuación: $scoreValue"
 
         btnNewGame.visibility = View.VISIBLE
         btnMenu.visibility = View.VISIBLE
@@ -368,17 +358,11 @@ class Snake : Activity() {
 
         // Oculta el campo de score en pantalla de Game Over (opcional)
         scoreField.visibility = View.INVISIBLE
-        // Nota: la música sigue; se detendrá al ir al menú principal
+        // La música se detendrá cuando elijas Menú Principal
     }
 
-    private fun pauseGame() {
-        currentDirection = "pause"
-    }
-
-    private fun resumeGame() {
-        currentDirection = "right"
-    }
-
+    private fun pauseGame() { currentDirection = "pause" }
+    private fun resumeGame() { currentDirection = "right" }
     private fun isGameRunning(): Boolean = currentDirection != "pause"
 
     private fun setSnakeColor(color: Int) {
@@ -389,7 +373,7 @@ class Snake : Activity() {
     }
 
     private fun goToMainMenu() {
-        stopMusic()  // ⬅️ NUEVO: detener música al ir al menú
+        stopMusic()
         startActivity(Intent(this, MainActivity::class.java))
         finish()
     }
@@ -415,11 +399,38 @@ class Snake : Activity() {
 
     override fun onPause() {
         super.onPause()
-        mediaPlayer?.pause()  // ⬅️ Pausa si app va a background
+        mediaPlayer?.pause()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        stopMusic()           // ⬅️ Libera recursos al destruir
+        stopMusic()
+    }
+
+    // ======= Instrucciones (botón A) =======
+    private fun showInstructions() {
+        val msg = """
+            Objetivo:
+            • Come la comida para crecer y sumar puntos.
+            • Pierdes si tocas los bordes.
+
+            Controles:
+            • D-Pad: mover la serpiente.
+            • B: cambiar el color de la serpiente.
+            • Select: alterna entre “Nuevo Juego” y “Menú Principal”.
+            • Start: ejecuta la opción seleccionada (o inicia un nuevo juego si no estás en el menú).
+            • A: ver estas instrucciones.
+
+            Música:
+            • Empieza con “Nuevo Juego”.
+            • Se detiene al volver al Menú Principal o salir.
+        """.trimIndent()
+
+        AlertDialog.Builder(this)
+            .setTitle("Instrucciones")
+            .setMessage(msg)
+            .setPositiveButton("OK", null)
+            .setCancelable(true)
+            .show()
     }
 }
