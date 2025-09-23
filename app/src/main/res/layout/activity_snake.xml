@@ -133,21 +133,24 @@
             </RelativeLayout>
 
             <!-- PUNTUACIÓN (debajo del bisel) -->
+
+            <!-- SALIR -->
+
             <Button
                 android:id="@+id/score2"
                 android:layout_width="140dp"
                 android:layout_height="wrap_content"
-                android:text="puntuacion"
-                android:textStyle="bold"
-                android:textSize="16sp"
+                android:layout_marginTop="92dp"
                 android:background="@color/green"
+                android:text="puntuacion"
                 android:textColor="@color/black"
-                app:layout_constraintTop_toBottomOf="@id/gBottom"
-                app:layout_constraintStart_toStartOf="parent"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintVertical_bias="0.07" />
+                app:layout_constraintHorizontal_bias="0.494"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/gBottom" />
 
-            <!-- SALIR -->
             <Button
                 android:id="@+id/btnExitSnake"
                 android:layout_width="wrap_content"
