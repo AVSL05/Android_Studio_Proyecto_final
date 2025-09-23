@@ -34,10 +34,10 @@ class MemoramaActivity : AppCompatActivity() {
         val gridLayout = findViewById<GridLayout>(R.id.gridMemorama)
         val numPairs = 8
         val images = listOf(
-            R.drawable.ic_launcher_foreground, R.drawable.ic_launcher_background,
-            android.R.drawable.ic_menu_camera, android.R.drawable.ic_menu_compass,
-            android.R.drawable.ic_menu_directions, android.R.drawable.ic_menu_gallery,
-            android.R.drawable.ic_menu_manage, android.R.drawable.ic_menu_mapmode
+            R.drawable.cactus, R.drawable.papapum,
+            R.drawable.girasol, R.drawable.planta_carnivora,
+            R.drawable.lanza_guisantes, R.drawable.pvzlogo,
+            R.drawable.melonpulta, R.drawable.zombie
         )
         // Asegurarse de tener suficientes imágenes
         val cards = (images + images).shuffled().mapIndexed { index, imageResId ->
