@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".Juegos.Snake">
 
-    <!-- Contenedor con la misma proporción que tu PNG (571x974) -->
+    <!-- Contenedor con proporción del marco Game Boy -->
     <FrameLayout
         android:id="@+id/gbContainer"
         android:layout_width="0dp"
@@ -18,7 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintDimensionRatio="571:974">
 
-        <!-- Fondo: carátula Game Boy -->
+        <!-- Carátula -->
         <ImageView
             android:id="@+id/gbFrame"
             android:layout_width="match_parent"
@@ -27,12 +27,13 @@
             android:scaleType="fitCenter"
             android:src="@drawable/gameboysnake" />
 
-        <!-- Capa superior para posicionar por porcentajes -->
+        <!-- Capa superior para zonas táctiles y pantalla -->
+        <!--  ESTA ERA LA ETIQUETA QUE FALTABA  -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <!-- VENTANA DE JUEGO (Guidelines con width/height) -->
+            <!-- Ventana de juego (guidelines) -->
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/gLeft"
                 android:layout_width="wrap_content"
@@ -61,7 +62,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintGuide_percent="0.400" />
 
-            <!-- TABLERO dentro de la “pantalla” -->
+            <!-- Pantalla de juego -->
             <RelativeLayout
                 android:id="@+id/board"
                 android:layout_width="0dp"
@@ -73,7 +74,7 @@
                 app:layout_constraintTop_toTopOf="@id/gTop"
                 app:layout_constraintBottom_toBottomOf="@id/gBottom" />
 
-            <!-- OVERLAY de mensajes dentro de la pantalla -->
+            <!-- Overlay: menú / mensajes -->
             <RelativeLayout
                 android:id="@+id/overlay"
                 android:layout_width="0dp"
@@ -83,14 +84,14 @@
                 app:layout_constraintTop_toTopOf="@id/gTop"
                 app:layout_constraintBottom_toBottomOf="@id/gBottom">
 
-                <Button
+                <TextView
                     android:id="@+id/score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
                     android:text="Game Over! Vuelve a Intentarlo"
                     android:textSize="18sp"
-                    android:background="@color/black"
                     android:textColor="@color/white"
                     android:visibility="gone"/>
 
@@ -107,13 +108,25 @@
                     android:visibility="gone"/>
 
                 <Button
-                    android:id="@+id/resume"
+                    android:id="@+id/menu_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/new_game"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="8dp"
-                    android:text="Resume Game"
+                    android:text="Menú Principal"
+                    android:background="@color/purple_700"
+                    android:textColor="@color/white"
+                    android:visibility="gone"/>
+
+                <Button
+                    android:id="@+id/resume"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/menu_btn"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:text="Reanudar"
                     android:background="@color/purple_700"
                     android:textColor="@color/white"
                     android:visibility="gone"/>
@@ -132,40 +145,40 @@
                     android:visibility="gone"/>
             </RelativeLayout>
 
-            <!-- PUNTUACIÓN (debajo del bisel) -->
-
-            <!-- SALIR -->
-
-            <Button
-                android:id="@+id/score2"
-                android:layout_width="140dp"
+            <!-- "Your Score" como HINT (sólo lectura) -->
+            <EditText
+                android:id="@+id/scoreField"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="92dp"
+                android:layout_marginTop="96dp"
                 android:background="@color/green"
-                android:text="puntuacion"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:hint="Your Score"
+                android:inputType="text"
+                android:importantForAutofill="no"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.494"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/gBottom" />
 
+            <!-- Salir -->
             <Button
                 android:id="@+id/btnExitSnake"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Salir del Juego"
-                android:textSize="14sp"
+                android:layout_marginBottom="24dp"
                 android:background="@color/red"
+                android:text="Salir del Juego"
                 android:textColor="@color/white"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintVertical_bias="0.93" />
+                app:layout_constraintStart_toStartOf="parent" />
 
-            <!-- ZONAS TÁCTILES INVISIBLES (D-Pad / A / B / START) -->
-
+            <!-- D-Pad -->
             <View
                 android:id="@+id/up"
                 android:layout_width="37dp"
@@ -226,13 +239,14 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.671" />
 
+            <!-- Botones A / B -->
             <View
                 android:id="@+id/btnA"
                 android:layout_width="47dp"
                 android:layout_height="50dp"
                 android:background="@android:color/transparent"
                 android:clickable="true"
-                android:contentDescription="Botón A"
+                android:contentDescription="Botón A (Pausa)"
                 android:focusable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -247,7 +261,7 @@
                 android:layout_height="50dp"
                 android:background="@android:color/transparent"
                 android:clickable="true"
-                android:contentDescription="Botón B"
+                android:contentDescription="Botón B (Color)"
                 android:focusable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -256,20 +270,35 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.685" />
 
+            <!-- Select y Start separados -->
             <View
-                android:id="@+id/pause"
-                android:layout_width="110dp"
-                android:layout_height="40dp"
+                android:id="@+id/btnSelect"
+                android:layout_width="80dp"
+                android:layout_height="36dp"
+                android:layout_marginBottom="104dp"
                 android:background="@android:color/transparent"
                 android:clickable="true"
-                android:contentDescription="Start / Pausa"
+                android:contentDescription="Select"
+                android:focusable="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btnStart"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <View
+                android:id="@+id/btnStart"
+                android:layout_width="80dp"
+                android:layout_height="36dp"
+                android:layout_marginBottom="104dp"
+                android:background="@android:color/transparent"
+                android:clickable="true"
+                android:contentDescription="Start"
                 android:focusable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.848" />
+                app:layout_constraintStart_toEndOf="@id/btnSelect" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- cierre del ConstraintLayout interno -->
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
