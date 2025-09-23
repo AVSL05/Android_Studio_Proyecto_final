@@ -166,7 +166,7 @@ class Snake : Activity() {
                     playagain.visibility = View.VISIBLE
                 }
 
-                val speed = 10f
+                val speed = 5f
 
                 val runnable = object : Runnable {
                     override fun run() {

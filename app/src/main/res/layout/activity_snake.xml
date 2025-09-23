@@ -162,95 +162,96 @@
                 app:layout_constraintVertical_bias="0.93" />
 
             <!-- ZONAS TÁCTILES INVISIBLES (D-Pad / A / B / START) -->
+
             <View
                 android:id="@+id/up"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="37dp"
+                android:layout_height="42dp"
                 android:background="@android:color/transparent"
                 android:clickable="true"
-                android:focusable="true"
                 android:contentDescription="Arriba"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:focusable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.168"
-                app:layout_constraintVertical_bias="0.591" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.179"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.621" />
 
             <View
                 android:id="@+id/down"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="31dp"
+                android:layout_height="43dp"
                 android:background="@android:color/transparent"
                 android:clickable="true"
-                android:focusable="true"
                 android:contentDescription="Abajo"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:focusable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.168"
-                app:layout_constraintVertical_bias="0.735" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.191"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.722" />
 
             <View
                 android:id="@+id/left"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="42dp"
+                android:layout_height="30dp"
                 android:background="@android:color/transparent"
                 android:clickable="true"
-                android:focusable="true"
                 android:contentDescription="Izquierda"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:focusable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.046"
-                app:layout_constraintVertical_bias="0.663" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.084"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.666" />
 
             <View
                 android:id="@+id/right"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="47dp"
+                android:layout_height="42dp"
                 android:background="@android:color/transparent"
                 android:clickable="true"
-                android:focusable="true"
                 android:contentDescription="Derecha"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:focusable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.291"
-                app:layout_constraintVertical_bias="0.663" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.671" />
 
             <View
                 android:id="@+id/btnA"
-                android:layout_width="88dp"
-                android:layout_height="88dp"
+                android:layout_width="47dp"
+                android:layout_height="50dp"
                 android:background="@android:color/transparent"
                 android:clickable="true"
-                android:focusable="true"
                 android:contentDescription="Botón A"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:focusable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.846"
-                app:layout_constraintVertical_bias="0.658" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.887"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.651" />
 
             <View
                 android:id="@+id/btnB"
-                android:layout_width="88dp"
-                android:layout_height="88dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:background="@android:color/transparent"
                 android:clickable="true"
-                android:focusable="true"
                 android:contentDescription="Botón B"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:focusable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.676"
-                app:layout_constraintVertical_bias="0.693" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.698"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.685" />
 
             <View
                 android:id="@+id/pause"
@@ -258,14 +259,14 @@
                 android:layout_height="40dp"
                 android:background="@android:color/transparent"
                 android:clickable="true"
-                android:focusable="true"
                 android:contentDescription="Start / Pausa"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:focusable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.55"
-                app:layout_constraintVertical_bias="0.90" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.848" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
