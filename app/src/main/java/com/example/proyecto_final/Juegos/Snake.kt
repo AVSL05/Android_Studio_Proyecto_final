@@ -3,6 +3,7 @@ package com.example.proyecto_final.Juegos
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
+import android.media.MediaPlayer              // musica
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -29,6 +30,9 @@ class Snake : Activity() {
     private var halfH = 0f
     private val speed = 5f
 
+    // --- Música
+    private var mediaPlayer: MediaPlayer? = null     // ⬅️ NUEVO
+
     // Colores para el botón B
     private val snakeColors = listOf(Color.GREEN, Color.CYAN, Color.YELLOW, Color.MAGENTA, Color.WHITE)
     private var colorIdx = 0
@@ -40,8 +44,7 @@ class Snake : Activity() {
     private lateinit var btnMenu: Button
     private lateinit var btnResume: Button
     private lateinit var btnPlayAgain: Button
-    private var scoreField: EditText? = null
-    private var scoreBtn: Button? = null
+    private lateinit var scoreField: EditText
     private lateinit var btnExitSnake: Button
 
     private lateinit var upBtn: View
@@ -61,7 +64,7 @@ class Snake : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Usa el layout correcto (cámbialo si tu archivo XML tiene otro nombre)
+        // Layout adaptado
         setContentView(R.layout.activity_snake)
 
         // --- Referencias del layout ---
@@ -71,8 +74,7 @@ class Snake : Activity() {
         btnMenu = findViewById(R.id.menu_btn)
         btnResume = findViewById(R.id.resume)
         btnPlayAgain = findViewById(R.id.playagain)
-        scoreField = findViewById(R.id.scoreField)     // EditText con hint "Your Score"
-        scoreBtn = findViewById(R.id.score2)           // fallback si aún usas Button
+        scoreField = findViewById(R.id.scoreField)
         btnExitSnake = findViewById(R.id.btnExitSnake)
 
         upBtn = findViewById(R.id.up)
@@ -91,6 +93,7 @@ class Snake : Activity() {
 
         // Salir al menú principal
         btnExitSnake.setOnClickListener {
+            stopMusic()  // ⬅️ NUEVO: detener música al salir
             startActivity(Intent(this, MainActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             })
@@ -112,11 +115,9 @@ class Snake : Activity() {
             if (inMenu) return@setOnClickListener
             if (isGameRunning()) {
                 pauseGame()
-                // mostrar opción Reanudar en overlay
                 btnResume.visibility = View.VISIBLE
                 overlay.visibility = View.VISIBLE
                 inMenu = true
-                // Ninguna de las dos opciones principales resaltada
                 highlightSelection(-1)
                 btnResume.alpha = 1f
             } else {
@@ -134,7 +135,6 @@ class Snake : Activity() {
         // SELECT -> Alternar opción en menú
         btnSelect.setOnClickListener {
             if (!inMenu) return@setOnClickListener
-            // si está visible Resume, dejamos que Start lo ejecute aparte
             toggleSelection()
         }
 
@@ -147,8 +147,8 @@ class Snake : Activity() {
                     return@setOnClickListener
                 }
                 when (selectedIndex) {
-                    0 -> { startNewGame(); hideMenu() }
-                    1 -> { goToMainMenu() } // aquí navega como prefieras
+                    0 -> { startNewGame(); hideMenu() }   // ⬅️ aquí inicia la música
+                    1 -> { goToMainMenu() }               // ⬅️ aquí se detiene
                 }
             } else {
                 if (!isGameRunning()) startNewGame()
@@ -177,8 +177,9 @@ class Snake : Activity() {
         highlightSelection(selectedIndex)
 
         // score UI
-        scoreField?.apply { setText(""); hint = "Your Score" }
-        scoreBtn?.visibility = View.INVISIBLE
+        scoreField.setText("")
+        scoreField.hint = "Your Score"
+        scoreField.visibility = View.VISIBLE
     }
 
     private fun hideMenu() {
@@ -208,12 +209,14 @@ class Snake : Activity() {
 
     // ================== Juego ==================
     private fun startNewGame() {
+        // 🔊 Música ON al iniciar juego
+        startMusic()   // ⬅️ NUEVO
+
         // Reset UI
         btnResume.visibility = View.GONE
         btnPlayAgain.visibility = View.GONE
-        scoreBtn?.visibility = View.VISIBLE
-        scoreBtn?.text = "score : 0"
-        scoreField?.setText("") // deja solo el hint
+        scoreField.visibility = View.VISIBLE
+        scoreField.setText("0")
 
         board.removeAllViews()
         snakeSegments.clear()
@@ -222,6 +225,7 @@ class Snake : Activity() {
         delayMillis = 30L
 
         // Cabeza
+        // Usa el recurso que tengas: ic_snake (vector/imagen) o snake.png
         snakeHead.setImageResource(R.drawable.ic_snake)
         snakeHead.layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -268,7 +272,7 @@ class Snake : Activity() {
                 val threshold = (snakeHead.width.coerceAtLeast(snakeHead.height)) * 0.8f
 
                 if (distance < threshold) {
-                    val seg = ImageView(this)
+                    val seg = ImageView(this@Snake)
                     seg.setImageResource(R.drawable.ic_snake)
                     seg.layoutParams = ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -278,25 +282,15 @@ class Snake : Activity() {
                     seg.translationY = snakeSegments.last().translationY
                     board.addView(seg)
                     snakeSegments.add(seg)
-                    // aplica color al nuevo segmento
+                    // color al nuevo segmento
                     setSnakeColor(snakeColors[colorIdx])
 
                     dropFood()
 
                     scoreValue++
-                    scoreBtn?.text = "score : $scoreValue"
-                    scoreField?.setText(scoreValue.toString())
+                    scoreField.setText(scoreValue.toString())
                     if (delayMillis > 6) delayMillis -= 1
                 }
-            }
-
-            fun gameOver() {
-                currentDirection = "pause"
-                // Muestra puntaje en el overlay (si tienes un TextView/Button score)
-                // Aquí reutilizamos playAgain visible:
-                btnPlayAgain.visibility = View.VISIBLE
-                // Oculta botón score si lo usas
-                scoreBtn?.visibility = View.INVISIBLE
             }
 
             val runnable = object : Runnable {
@@ -351,6 +345,32 @@ class Snake : Activity() {
         }
     }
 
+    // ======= Game Over: overlay con Nuevo Juego / Menú Principal =======
+    private fun gameOver() {
+        currentDirection = "pause"
+
+        val scoreLabel: TextView = findViewById(R.id.score)
+
+        overlay.visibility = View.VISIBLE
+        board.visibility = View.VISIBLE // deja el tablero detrás
+
+        scoreLabel.visibility = View.VISIBLE
+        scoreLabel.text = "Game Over! Vuelve a Intentarlo\nPuntuación: $scoreValue"
+
+        btnNewGame.visibility = View.VISIBLE
+        btnMenu.visibility = View.VISIBLE
+        btnResume.visibility = View.GONE
+        btnPlayAgain.visibility = View.GONE
+
+        inMenu = true
+        selectedIndex = 0
+        highlightSelection(selectedIndex)
+
+        // Oculta el campo de score en pantalla de Game Over (opcional)
+        scoreField.visibility = View.INVISIBLE
+        // Nota: la música sigue; se detendrá al ir al menú principal
+    }
+
     private fun pauseGame() {
         currentDirection = "pause"
     }
@@ -362,17 +382,44 @@ class Snake : Activity() {
     private fun isGameRunning(): Boolean = currentDirection != "pause"
 
     private fun setSnakeColor(color: Int) {
-        // Aplica tinte a cabeza y segmentos existentes
         snakeHead.setColorFilter(color)
         for (i in 1 until snakeSegments.size) {
             snakeSegments[i].setColorFilter(color)
         }
-        // Si quieres repintar carne/food, no lo toques.
     }
 
     private fun goToMainMenu() {
-        // Aquí decides: cambiar de Activity o mostrar más opciones
+        stopMusic()  // ⬅️ NUEVO: detener música al ir al menú
         startActivity(Intent(this, MainActivity::class.java))
         finish()
+    }
+
+    // ================== Música (helpers) ==================
+    private fun startMusic() {
+        if (mediaPlayer == null) {
+            mediaPlayer = MediaPlayer.create(this, R.raw.snake_music).apply {
+                isLooping = true
+                setVolume(0.6f, 0.6f)
+            }
+        }
+        mediaPlayer?.start()
+    }
+
+    private fun stopMusic() {
+        mediaPlayer?.let {
+            if (it.isPlaying) it.stop()
+            it.release()
+        }
+        mediaPlayer = null
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mediaPlayer?.pause()  // ⬅️ Pausa si app va a background
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopMusic()           // ⬅️ Libera recursos al destruir
     }
 }

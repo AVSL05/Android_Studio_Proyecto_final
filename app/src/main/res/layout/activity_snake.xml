@@ -28,7 +28,6 @@
             android:src="@drawable/gameboysnake" />
 
         <!-- Capa superior para zonas táctiles y pantalla -->
-        <!--  ESTA ERA LA ETIQUETA QUE FALTABA  -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
