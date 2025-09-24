@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -36,20 +35,6 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         setContentView(R.layout.activity_register)
-
-        // Configurar el switch de modo oscuro
-        val switchDarkMode = findViewById<Switch>(R.id.switchDarkMode)
-        switchDarkMode.isChecked = isDarkMode
-        switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
-            val editor = prefs.edit()
-            editor.putBoolean("dark_mode", isChecked)
-            editor.apply()
-            if (isChecked) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
-        }
 
         databaseHelper = DatabaseHelper(this)
         initViews()
