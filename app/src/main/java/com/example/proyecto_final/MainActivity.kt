@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
@@ -20,6 +21,7 @@ import com.example.proyecto_final.Juegos.SudokuActivity
 import com.example.proyecto_final.utils.SessionManager
 import android.widget.Toast
 import com.example.proyecto_final.Juegos.TetrisActivity // Import de la Activity de Tetris
+import androidx.appcompat.widget.SwitchCompat
 
 // Actividad principal que muestra información del usuario y permite cerrar sesión
 
@@ -55,7 +57,22 @@ class MainActivity : AppCompatActivity() {
         val snakeUri = Uri.parse("android.resource://" + packageName + "/raw/snake")
         Glide.with(this).asGif().load(snakeUri).into(imageSnake)
         val btnPlaySnake = findViewById<Button>(R.id.btnPlaySnake)
-        imageSnake.setOnClickListener { btnPlaySnake.visibility = View.VISIBLE }
+        val btnPlayMemorama = findViewById<Button>(R.id.btnPlayMemorama)
+        val btnPlaySudoku = findViewById<Button>(R.id.btnPlaySudoku)
+        val btnPlayBuscaMinas = findViewById<Button>(R.id.btnPlayBuscaMinas)
+        val btnPlayTetris = findViewById<Button>(R.id.btnPlayTetris)
+
+        // Referencias a todos los botones de jugar
+        val btnsJugar = listOf(btnPlaySnake, btnPlayMemorama, btnPlaySudoku, btnPlayBuscaMinas, btnPlayTetris)
+
+        imageSnake.setOnClickListener {
+            if (btnPlaySnake.visibility == View.VISIBLE) {
+                btnPlaySnake.visibility = View.GONE
+            } else {
+                btnsJugar.forEach { it.visibility = View.GONE }
+                btnPlaySnake.visibility = View.VISIBLE
+            }
+        }
         btnPlaySnake.setOnClickListener {
             val intent = Intent(this, Snake::class.java)
             startActivity(intent)
@@ -64,8 +81,15 @@ class MainActivity : AppCompatActivity() {
         val imageMemorama = findViewById<ImageView>(R.id.imageMemorama)
         val memoramaUri = Uri.parse("android.resource://" + packageName + "/raw/memorama")
         Glide.with(this).asGif().load(memoramaUri).into(imageMemorama)
-        val btnPlayMemorama = findViewById<Button>(R.id.btnPlayMemorama)
-        imageMemorama.setOnClickListener { btnPlayMemorama.visibility = View.VISIBLE }
+
+        imageMemorama.setOnClickListener {
+            if (btnPlayMemorama.visibility == View.VISIBLE) {
+                btnPlayMemorama.visibility = View.GONE
+            } else {
+                btnsJugar.forEach { it.visibility = View.GONE }
+                btnPlayMemorama.visibility = View.VISIBLE
+            }
+        }
         btnPlayMemorama.setOnClickListener {
             val intent = Intent(this, MemoramaActivity::class.java)
             startActivity(intent)
@@ -78,9 +102,13 @@ class MainActivity : AppCompatActivity() {
         // cargar vía Uri (más fiable en algunos dispositivos)
         val sudokuUri = Uri.parse("android.resource://" + packageName + "/raw/sudoku")
         Glide.with(this).asGif().load(sudokuUri).into(imageSudoku)
-        val btnPlaySudoku = findViewById<Button>(R.id.btnPlaySudoku)
         imageSudoku.setOnClickListener {
-            btnPlaySudoku.visibility = View.VISIBLE
+            if (btnPlaySudoku.visibility == View.VISIBLE) {
+                btnPlaySudoku.visibility = View.GONE
+            } else {
+                btnsJugar.forEach { it.visibility = View.GONE }
+                btnPlaySudoku.visibility = View.VISIBLE
+            }
         }
         btnPlaySudoku.setOnClickListener {
             val intent = Intent(this, SudokuActivity::class.java)
@@ -92,8 +120,14 @@ class MainActivity : AppCompatActivity() {
         // se renombró el gif a buscaminas_anim.gif para evitar conflicto con buscaminas.mp3
         val buscaminasUri = Uri.parse("android.resource://" + packageName + "/raw/buscaminas_anim")
         Glide.with(this).asGif().load(buscaminasUri).into(imageBuscaMinas)
-        val btnPlayBuscaMinas = findViewById<Button>(R.id.btnPlayBuscaMinas)
-        imageBuscaMinas.setOnClickListener { btnPlayBuscaMinas.visibility = View.VISIBLE }
+        imageBuscaMinas.setOnClickListener {
+            if (btnPlayBuscaMinas.visibility == View.VISIBLE) {
+                btnPlayBuscaMinas.visibility = View.GONE
+            } else {
+                btnsJugar.forEach { it.visibility = View.GONE }
+                btnPlayBuscaMinas.visibility = View.VISIBLE
+            }
+        }
         btnPlayBuscaMinas.setOnClickListener {
             val intent = Intent(this, Buscaminas::class.java)
             startActivity(intent)
@@ -103,13 +137,42 @@ class MainActivity : AppCompatActivity() {
         val imageTetris = findViewById<ImageView>(R.id.imageTetris)
         val tetrisUri = Uri.parse("android.resource://" + packageName + "/raw/tetris")
         Glide.with(this).asGif().load(tetrisUri).into(imageTetris)
-        val btnPlayTetris = findViewById<Button>(R.id.btnPlayTetris)
 
-        imageTetris.setOnClickListener { btnPlayTetris.visibility = View.VISIBLE }
+        imageTetris.setOnClickListener {
+            if (btnPlayTetris.visibility == View.VISIBLE) {
+                btnPlayTetris.visibility = View.GONE
+            } else {
+                btnsJugar.forEach { it.visibility = View.GONE }
+                btnPlayTetris.visibility = View.VISIBLE
+            }
+        }
         btnPlayTetris.setOnClickListener {
             // Abrir la nueva actividad de Tetris
             val intent = Intent(this, TetrisActivity::class.java)
             startActivity(intent)
+        }
+
+        // Preferencias para modo oscuro
+        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
+        val isDarkMode = prefs.getBoolean("dark_mode", false)
+        if (isDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+
+        // Configurar el switch de modo oscuro
+        val switchDarkModeMain = findViewById<SwitchCompat>(R.id.switchDarkModeMain)
+        switchDarkModeMain.isChecked = isDarkMode
+        switchDarkModeMain.setOnCheckedChangeListener { _, isChecked ->
+            val editor = prefs.edit()
+            editor.putBoolean("dark_mode", isChecked)
+            editor.apply()
+            if (isChecked) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
         }
     }
 

@@ -156,7 +156,7 @@
         android:id="@+id/btnPlayBuscaMinas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="8dp"
         android:text="Jugar BuscaMinas"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/imageBuscaMinas"
@@ -189,5 +189,25 @@
         app:layout_constraintStart_toStartOf="@+id/imageTetris"
         app:layout_constraintEnd_toEndOf="@+id/imageTetris"
         android:layout_marginTop="8dp" />
+
+    <!-- Toggle para modo oscuro arriba a la derecha -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginBottom="8dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/modo_oscuro"
+            android:textSize="14sp"
+            android:textColor="?android:textColorPrimary"
+            android:layout_marginEnd="8dp" />
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchDarkModeMain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
