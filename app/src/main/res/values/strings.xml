@@ -7,4 +7,16 @@
     <string name="tetris_score">Puntuación: %1$d</string>
     <string name="tetris_level">Nivel: %1$d</string>
     <string name="tetris_lines">Líneas: %1$d</string>
+
+    <!-- Login y Registro -->
+    <string name="modo_oscuro">Modo oscuro</string>
+    <string name="iniciar_sesion">Iniciar Sesión</string>
+    <string name="correo_electronico">Correo electrónico</string>
+    <string name="contrasena">Contraseña</string>
+    <string name="no_tienes_cuenta_registrate">¿No tienes cuenta? Regístrate aquí</string>
+    <string name="registro">Registro</string>
+    <string name="nombre_completo">Nombre completo</string>
+    <string name="confirmar_contrasena">Confirmar contraseña</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="ya_tienes_cuenta_inicia_sesion">¿Ya tienes cuenta? Inicia sesión aquí</string>
 </resources>

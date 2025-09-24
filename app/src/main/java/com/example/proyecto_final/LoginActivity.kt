@@ -12,6 +12,7 @@ import com.example.proyecto_final.database.DatabaseHelper
 import com.example.proyecto_final.utils.SessionManager
 import androidx.appcompat.app.AppCompatDelegate
 import android.content.SharedPreferences
+import androidx.appcompat.widget.SwitchCompat
 
 class LoginActivity : AppCompatActivity() {
 
@@ -49,7 +50,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         // Configurar el switch de modo oscuro
-        val switchDarkMode = findViewById<Switch>(R.id.switchDarkMode)
+        val switchDarkMode = findViewById<SwitchCompat>(R.id.switchDarkMode)
         switchDarkMode.isChecked = isDarkMode
         switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
             val editor = prefs.edit()

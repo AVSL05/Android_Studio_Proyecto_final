@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -10,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Registro"
+        android:text="@string/registro"
         android:textSize="32sp"
         android:textStyle="bold"
         android:textColor="?android:textColorPrimary"
@@ -28,10 +29,11 @@
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nombre completo"
+            android:hint="@string/nombre_completo"
             android:inputType="textPersonName"
             android:padding="16dp"
-            android:maxLength="35" />
+            android:maxLength="35"
+            android:autofillHints="name" />
 
     </com.google.android.material.textfield.TextInputLayout>
     <!-- Fin de apartado de nombre completo -->
@@ -48,10 +50,11 @@
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Correo electrónico"
+            android:hint="@string/correo_electronico"
             android:inputType="textEmailAddress"
             android:padding="16dp"
-            android:maxLength="35" />
+            android:maxLength="35"
+            android:autofillHints="emailAddress" />
 
     </com.google.android.material.textfield.TextInputLayout>
     <!-- Fin de apartado de correo electrónico -->
@@ -61,17 +64,19 @@
         style="@style/CustomTextInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="16dp"
+        app:endIconMode="password_toggle">
 
         <!-- EditText para contraseña -->
         <EditText
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Contraseña"
+            android:hint="@string/contrasena"
             android:inputType="textPassword"
             android:padding="16dp"
-            android:maxLength="35" />
+            android:maxLength="35"
+            android:autofillHints="password" />
 
     </com.google.android.material.textfield.TextInputLayout>
     <!-- Fin de apartado de contraseña -->
@@ -81,17 +86,19 @@
         style="@style/CustomTextInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp">
+        android:layout_marginBottom="24dp"
+        app:endIconMode="password_toggle">
 
         <!-- EditText para confirmar contraseña -->
         <EditText
             android:id="@+id/etConfirmPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Confirmar contraseña"
+            android:hint="@string/confirmar_contrasena"
             android:inputType="textPassword"
             android:padding="16dp"
-            android:maxLength="35" />
+            android:maxLength="35"
+            android:autofillHints="password" />
 
     </com.google.android.material.textfield.TextInputLayout>
     <!-- Fin de apartado de confirmar contraseña -->
@@ -101,7 +108,7 @@
         android:id="@+id/btnRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Registrarse"
+        android:text="@string/registrarse"
         android:textSize="16sp"
         android:textStyle="bold"
         android:layout_marginBottom="16dp"
@@ -112,7 +119,7 @@
         android:id="@+id/tvLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="¿Ya tienes cuenta? Inicia sesión aquí"
+        android:text="@string/ya_tienes_cuenta_inicia_sesion"
         android:textColor="?android:textColorPrimary"
         android:textSize="14sp"
         android:padding="8dp" />
