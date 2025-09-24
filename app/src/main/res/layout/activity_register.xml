@@ -7,6 +7,26 @@
     android:gravity="center"
     android:background="@color/white">
 
+    <!-- Toggle para modo oscuro arriba a la derecha -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginBottom="8dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Modo oscuro"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:layout_marginEnd="8dp" />
+        <Switch
+            android:id="@+id/switchDarkMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
     <!-- Título de Registro -->
     <TextView
         android:layout_width="wrap_content"
@@ -19,10 +39,10 @@
 
     <!-- Apartado de nombre completo -->
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/CustomTextInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        android:layout_marginBottom="16dp">
 
         <!-- EditText para nombre completo -->
         <EditText
@@ -39,10 +59,10 @@
 
     <!-- Apartado de correo electrónico -->
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/CustomTextInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        android:layout_marginBottom="16dp">
 
         <!-- EditText para correo electrónico -->
         <EditText
@@ -59,10 +79,10 @@
 
     <!-- Apartado de contraseña -->
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/CustomTextInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        android:layout_marginBottom="16dp">
 
         <!-- EditText para contraseña -->
         <EditText
@@ -79,10 +99,10 @@
 
     <!-- Apartado de confirmar contraseña -->
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/CustomTextInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        android:layout_marginBottom="24dp">
 
         <!-- EditText para confirmar contraseña -->
         <EditText

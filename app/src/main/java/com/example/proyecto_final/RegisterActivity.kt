@@ -4,9 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.proyecto_final.database.DatabaseHelper
 
 // Maneja el registro de nuevos usuarios
@@ -23,10 +25,33 @@ class RegisterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Preferencias para modo oscuro
+        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
+        val isDarkMode = prefs.getBoolean("dark_mode", false)
+        if (isDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+
         setContentView(R.layout.activity_register)
 
-        databaseHelper = DatabaseHelper(this)
+        // Configurar el switch de modo oscuro
+        val switchDarkMode = findViewById<Switch>(R.id.switchDarkMode)
+        switchDarkMode.isChecked = isDarkMode
+        switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
+            val editor = prefs.edit()
+            editor.putBoolean("dark_mode", isChecked)
+            editor.apply()
+            if (isChecked) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+        }
 
+        databaseHelper = DatabaseHelper(this)
         initViews()
         setupClickListeners()
     }
