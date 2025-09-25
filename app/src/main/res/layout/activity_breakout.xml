@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Layout del juego Breakout
+  - Contiene un SurfaceView donde se renderizará el juego (más adelante conectaremos la lógica)
+  - Incluye una capa superpuesta (overlay) para mostrar puntaje, vidas y botones de control
+  - Todos los elementos tienen comentarios en español explicando su función
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootBreakout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    tools:context=".Juegos.BreakoutActivity">
+
+    <!-- SurfaceView principal donde se dibuja el juego
+         (Por ahora la Activity usa una vista creada por código; luego la reemplazaremos para usar este SurfaceView) -->
+    <SurfaceView
+        android:id="@+id/surfaceGame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:keepScreenOn="true" />
+
+    <!-- Contenedor overlay para HUD (puntaje, vidas y botones) -->
+    <LinearLayout
+        android:id="@+id/hudContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:gravity="center_vertical"
+        android:background="#44000000">
+
+        <!-- Texto que muestra el puntaje actual -->
+        <TextView
+            android:id="@+id/tvScoreBreakout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Puntos: 0"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:layout_marginEnd="24dp" />
+
+        <!-- Texto que muestra las vidas restantes -->
+        <TextView
+            android:id="@+id/tvLivesBreakout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vidas: 3"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:layout_marginEnd="24dp" />
+
+        <!-- Espaciador flexible para empujar los botones a la derecha -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Botón para reiniciar la partida manualmente -->
+        <Button
+            android:id="@+id/btnResetBreakout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reiniciar"
+            android:textAllCaps="false"
+            android:layout_marginEnd="12dp" />
+
+        <!-- Botón para salir/regresar al menú principal -->
+        <Button
+            android:id="@+id/btnExitBreakout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Salir"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
+    <!-- Mensajes centrados para estados de victoria/derrota
+         (Se muestran/ocultan dinámicamente más adelante) -->
+    <LinearLayout
+        android:id="@+id/overlayEndGame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="#88000000"
+        android:visibility="gone">
+
+        <!-- Texto principal de estado (GANASTE / GAME OVER) -->
+        <TextView
+            android:id="@+id/tvEndTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GAME OVER"
+            android:textColor="#FFFFFF"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Texto secundario que invita a reiniciar -->
+        <TextView
+            android:id="@+id/tvEndSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Toca Reiniciar"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Botón central para reiniciar desde overlay -->
+        <Button
+            android:id="@+id/btnRestartOverlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reintentar"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
+</FrameLayout>
+
