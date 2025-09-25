@@ -190,7 +190,32 @@
         app:layout_constraintEnd_toEndOf="@+id/imageTetris"
         android:layout_marginTop="8dp" />
 
-    <!-- Toggle para modo oscuro arriba a la derecha -->
+    <!-- NUEVO: Juego Breakout (imagen + botón) -->
+    <ImageView
+        android:id="@+id/imageBreakout"
+        android:layout_width="150dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:adjustViewBounds="true"
+        android:background="@android:color/darker_gray"
+        android:contentDescription="GIF Breakout"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toBottomOf="@+id/btnPlayTetris"
+        app:layout_constraintStart_toStartOf="@+id/imageTetris"
+        app:layout_constraintDimensionRatio="16:9" />
+
+    <Button
+        android:id="@+id/btnPlayBreakout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Jugar Breakout"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/imageBreakout"
+        app:layout_constraintStart_toStartOf="@+id/imageBreakout"
+        app:layout_constraintEnd_toEndOf="@+id/imageBreakout"
+        android:layout_marginTop="8dp" />
+
+    <!-- Toggle modo oscuro -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

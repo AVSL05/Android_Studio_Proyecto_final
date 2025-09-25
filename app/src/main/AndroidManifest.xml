@@ -49,6 +49,11 @@
             android:name=".Juegos.TetrisActivity"
             android:exported="false" />
 
+        <!-- Activity del juego Breakout (pelota y ladrillos) -->
+        <activity
+            android:name=".Juegos.BreakoutActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

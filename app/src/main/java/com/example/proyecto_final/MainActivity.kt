@@ -21,6 +21,7 @@ import com.example.proyecto_final.Juegos.SudokuActivity
 import com.example.proyecto_final.utils.SessionManager
 import android.widget.Toast
 import com.example.proyecto_final.Juegos.TetrisActivity // Import de la Activity de Tetris
+import com.example.proyecto_final.Juegos.BreakoutActivity // NUEVO: import de Breakout
 import androidx.appcompat.widget.SwitchCompat
 
 // Actividad principal que muestra información del usuario y permite cerrar sesión
@@ -61,9 +62,10 @@ class MainActivity : AppCompatActivity() {
         val btnPlaySudoku = findViewById<Button>(R.id.btnPlaySudoku)
         val btnPlayBuscaMinas = findViewById<Button>(R.id.btnPlayBuscaMinas)
         val btnPlayTetris = findViewById<Button>(R.id.btnPlayTetris)
+        val btnPlayBreakout = findViewById<Button>(R.id.btnPlayBreakout) // NUEVO: botón Breakout
 
-        // Referencias a todos los botones de jugar
-        val btnsJugar = listOf(btnPlaySnake, btnPlayMemorama, btnPlaySudoku, btnPlayBuscaMinas, btnPlayTetris)
+        // Referencias a todos los botones de jugar (sin incluir todavía Breakout en listeners previos)
+        val btnsJugar = listOf(btnPlaySnake, btnPlayMemorama, btnPlaySudoku, btnPlayBuscaMinas, btnPlayTetris, btnPlayBreakout)
 
         imageSnake.setOnClickListener {
             if (btnPlaySnake.visibility == View.VISIBLE) {
@@ -152,6 +154,30 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // --------- NUEVO: Breakout (imagen + botón) ---------
+        val imageBreakout = findViewById<ImageView>(R.id.imageBreakout)
+        // Intentamos cargar un GIF/animación si existe en raw (nombre esperado: breakout.*)
+        val breakoutResId = resources.getIdentifier("breakout", "raw", packageName)
+        if (breakoutResId != 0) {
+            // Cargar como GIF (si es .gif) o como recurso estático
+            try { Glide.with(this).asGif().load(breakoutResId).into(imageBreakout) } catch (e: Exception) {
+                Glide.with(this).load(breakoutResId).into(imageBreakout)
+            }
+        } // Si no existe, queda el background gris por defecto
+
+        imageBreakout.setOnClickListener {
+            if (btnPlayBreakout.visibility == View.VISIBLE) {
+                btnPlayBreakout.visibility = View.GONE
+            } else {
+                btnsJugar.forEach { it.visibility = View.GONE }
+                btnPlayBreakout.visibility = View.VISIBLE
+            }
+        }
+        btnPlayBreakout.setOnClickListener {
+            // Lanzar Activity de Breakout
+            startActivity(Intent(this, BreakoutActivity::class.java))
+        }
+
         // Preferencias para modo oscuro
         val prefs = getSharedPreferences("settings", MODE_PRIVATE)
         val isDarkMode = prefs.getBoolean("dark_mode", false)
@@ -198,6 +224,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        // No ExoPlayer instances to release for Snake/Memorama/BuscaMinas (usamos GIFs)
+        // No ExoPlayer instances to release for Snake/Memorama/BuscaMinas/Tetris/Breakout (usamos GIFs o imágenes)
     }
 }
