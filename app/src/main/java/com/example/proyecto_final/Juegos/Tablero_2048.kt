@@ -1,34 +1,42 @@
-package com.example.a2048
+package com.example.proyecto_final
 
 import android.app.AlertDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.*
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 
 class Tablero_2048 : AppCompatActivity() {
-    private lateinit var logica: Logica
+    private lateinit var logica: Logica_2048
     private lateinit var guardado2048: Guardado_2048
     private var tamano = 4
     private lateinit var contenedorTablero: LinearLayout
     private lateinit var tvMovimientos: TextView
     private lateinit var btnSalir: Button
-    private var tamañoCelda = 60 // Tamaño base en dp
+    private var tamanoCelda = 60 // Tamaño base en dp
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.tablero_2048)
 
+        // Configurar el callback para el botón back
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                mostrarDialogoSalir()
+            }
+        })
+
         tamano = intent.getIntExtra("TAMANO", 4)
         // Ajustar tamaño de celda según la dificultad
-        tamañoCelda = when (tamano) {
+        tamanoCelda = when (tamano) {
             4 -> 60
             5 -> 50
             6 -> 40
             else -> 60
         }
 
-        logica = Logica(tamano)
+        logica = Logica_2048(tamano)
         guardado2048 = Guardado_2048(this)
 
         inicializarVistas()
@@ -61,8 +69,8 @@ class Tablero_2048 : AppCompatActivity() {
             for (j in 0 until tamano) {
                 val celda = layoutInflater.inflate(R.layout.celda_2048, null) as TextView
                 celda.layoutParams = LinearLayout.LayoutParams(
-                    dpToPx(tamañoCelda),
-                    dpToPx(tamañoCelda)
+                    dpToPx(tamanoCelda),
+                    dpToPx(tamanoCelda)
                 ).apply {
                     setMargins(dpToPx(2), dpToPx(2), dpToPx(2), dpToPx(2))
                 }
@@ -190,9 +198,5 @@ class Tablero_2048 : AppCompatActivity() {
         logica.reiniciarJuego()
         guardado2048.limpiarPartida(tamano)
         actualizarTablero()
-    }
-
-    override fun onBackPressed() {
-        mostrarDialogoSalir()
     }
 }

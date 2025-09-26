@@ -1,140 +1,138 @@
-package com.example.pong
+package com.example.proyecto_final
 
 import android.content.Context
-import android.content.SharedPreferences
-import android.view.MotionEvent
+import android.graphics.RectF
 
-class LogicaJuego_p(context: Context) {
+class LogicaJuego_p(private val context: Context) {
+    // Dimensiones de la pantalla
+    var anchoPantalla = 0f
+    var altoPantalla = 0f
 
-    // Elementos del juego
-    var canvasWidth = 0
-    var canvasHeight = 0
-    var paddleWidth = 0
-    var paddleHeight = 0
-    var paddleX = 0f
-    var enemyPaddleWidth = 0
-    var enemyPaddleHeight = 0
-    var enemyPaddleX = 0f
-    var ballX = 0f
-    var ballY = 0f
-    val ballRadius = 20f
+    // Pelota
+    var pelotaX = 0f
+    var pelotaY = 0f
+    var pelotaVelX = 5f
+    var pelotaVelY = 5f
+    val pelotaRadio = 20f
+
+    // Paletas
+    val paletaAncho = 200f
+    val paletaAlto = 30f
+    var paletaJugadorX = 0f
+    var paletaJugadorY = 0f
+    var paletaIAX = 0f
+    var paletaIAY = 0f
+
+    // Puntuación
+    var puntajeJugador = 0
+    var puntajeIA = 0
+    var highScore = 0
 
     // Estado del juego
-    var score = 0
-    var highScore = 0
-    var gameOver = false
-    var bounceCount = 0
+    var juegoActivo = true
 
-    // Gestores especializados
-    private lateinit var prefs: SharedPreferences
-    private lateinit var gestorVelocidad: VelocidadPelota_p
-    private lateinit var gestorColisiones: GestorColisiones_p
-    private lateinit var gestorEnemigo: GestorEnemigo_p
-    private lateinit var gestorUI: GestorUI_p
+    // Propiedades puente para compatibilidad con otros gestores
+    val canvasWidth: Float get() = anchoPantalla
+    val canvasHeight: Float get() = altoPantalla
+    val enemyPaddleWidth: Float get() = paletaAncho
+    var enemyPaddleX: Float
+        get() = paletaIAX
+        set(value) { paletaIAX = value }
+    val ballX: Float get() = pelotaX
+    val score: Int get() = puntajeJugador
 
-    init {
-        prefs = context.getSharedPreferences("PongPrefs", Context.MODE_PRIVATE)
-        gestorVelocidad = VelocidadPelota_p()
-        gestorColisiones = GestorColisiones_p(this, gestorVelocidad)
-        gestorEnemigo = GestorEnemigo_p(this)
-        gestorUI = GestorUI_p(this, prefs)
+    fun resetGame() = reiniciarJuego()
+
+    fun inicializar(ancho: Int, alto: Int) {
+        anchoPantalla = ancho.toFloat()
+        altoPantalla = alto.toFloat()
+
+        // Posición inicial de la pelota (centro)
+        pelotaX = anchoPantalla / 2
+        pelotaY = altoPantalla / 2
+
+        // Posición inicial de las paletas
+        paletaJugadorX = (anchoPantalla - paletaAncho) / 2
+        paletaJugadorY = altoPantalla - paletaAlto - 50f
+
+        paletaIAX = (anchoPantalla - paletaAncho) / 2
+        paletaIAY = 50f
     }
 
-    fun inicializar(width: Int, height: Int) {
-        canvasWidth = width
-        canvasHeight = height
-        configurarDimensiones(width, height)
-        resetGame()
-    }
-
-    fun configurarDimensiones(width: Int, height: Int) {
-        canvasWidth = width
-        canvasHeight = height
-
-        paddleWidth = width / 4
-        paddleHeight = height / 40
-        enemyPaddleWidth = width / 4
-        enemyPaddleHeight = height / 40
-
-        paddleX = (width - paddleWidth) / 2f
-        enemyPaddleX = (width - enemyPaddleWidth) / 2f
-
-        gestorVelocidad.inicializar(width, height)
-        resetBall()
+    fun configurarDimensiones(ancho: Int, alto: Int) {
+        anchoPantalla = ancho.toFloat()
+        altoPantalla = alto.toFloat()
     }
 
     fun actualizar() {
-        if (gameOver) return
+        if (!juegoActivo) return
 
-        // Mover la pelota con velocidad más notable
-        ballX += gestorVelocidad.getVelocidadX()
-        ballY += gestorVelocidad.getVelocidadY()
+        // Mover la pelota
+        pelotaX += pelotaVelX
+        pelotaY += pelotaVelY
 
-        // Rebotes en bordes laterales
-        gestorColisiones.manejarRebotesParedes()
-
-        // Inteligencia del enemigo
-        gestorEnemigo.actualizar()
-
-        // Colisiones
-        gestorColisiones.manejarColisiones()
-
-        // Verificar game over
-        if (ballY + ballRadius > canvasHeight) {
-            gameOver = true
-            gestorUI.actualizarHighScore()
+        // Rebote en las paredes laterales
+        if (pelotaX - pelotaRadio <= 0 || pelotaX + pelotaRadio >= anchoPantalla) {
+            pelotaVelX = -pelotaVelX
         }
-    }
 
-    fun manejarToque(event: MotionEvent): Boolean {
-        if (gameOver) {
-            return gestorUI.manejarToqueGameOver(event)
-        } else {
-            when (event.action) {
-                MotionEvent.ACTION_MOVE, MotionEvent.ACTION_DOWN -> {
-                    paddleX = event.x - paddleWidth / 2f
-                    if (paddleX < 0) paddleX = 0f
-                    if (paddleX > canvasWidth - paddleWidth) paddleX = (canvasWidth - paddleWidth).toFloat()
-                    return true
-                }
-            }
-            return false
+        // Verificar colisión con paleta del jugador
+        if (pelotaY + pelotaRadio >= paletaJugadorY &&
+            pelotaX >= paletaJugadorX &&
+            pelotaX <= paletaJugadorX + paletaAncho) {
+            pelotaVelY = -Math.abs(pelotaVelY)
         }
-    }
 
-    fun resetGame() {
-        score = 0
-        bounceCount = 0
-        gameOver = false
-        highScore = prefs.getInt("highScore", 0)
-        gestorColisiones.reset()
-        resetBall()
-    }
-
-    private fun resetBall() {
-        ballX = canvasWidth / 2f
-        ballY = canvasHeight / 2f
-        gestorVelocidad.resetVelocidad()
-        gestorColisiones.reset()
-    }
-
-    fun ajustarDificultad() {
-        // PROGRESIÓN DE VELOCIDAD MÁS NOTORIA
-        when {
-            bounceCount <= 5 -> {
-                gestorVelocidad.aumentarDificultadProgresiva()
-                println("AUMENTO DIFICULTAD - Rebote: $bounceCount")
-            }
-            bounceCount == 6 -> {
-                gestorVelocidad.disminuirVelocidad()
-                println("DESCANSO VELOCIDAD - Rebote: $bounceCount")
-            }
-            else -> {
-                gestorVelocidad.continuarProgresion()
-                println("CONTINUACIÓN PROGRESIÓN - Rebote: $bounceCount")
-            }
+        // Verificar colisión con paleta de la IA
+        if (pelotaY - pelotaRadio <= paletaIAY + paletaAlto &&
+            pelotaX >= paletaIAX &&
+            pelotaX <= paletaIAX + paletaAncho) {
+            pelotaVelY = Math.abs(pelotaVelY)
         }
+
+        // Verificar si alguien anotó
+        if (pelotaY - pelotaRadio <= 0) {
+            // Punto para el jugador
+            puntajeJugador++
+            if (puntajeJugador > highScore) highScore = puntajeJugador
+            reiniciarPelota()
+        } else if (pelotaY + pelotaRadio >= altoPantalla) {
+            // Punto para la IA
+            puntajeIA++
+            reiniciarPelota()
+        }
+
+        // Mover la IA (sigue la pelota)
+        val centroIA = paletaIAX + paletaAncho / 2
+        if (pelotaX < centroIA) {
+            paletaIAX -= 4f
+        } else if (pelotaX > centroIA) {
+            paletaIAX += 4f
+        }
+
+        // Mantener la IA dentro de los límites
+        if (paletaIAX < 0) paletaIAX = 0f
+        if (paletaIAX + paletaAncho > anchoPantalla) paletaIAX = anchoPantalla - paletaAncho
     }
 
-    fun getGestorVelocidad(): VelocidadPelota_p = gestorVelocidad
+    private fun reiniciarPelota() {
+        pelotaX = anchoPantalla / 2
+        pelotaY = altoPantalla / 2
+        pelotaVelX = if (Math.random() > 0.5) 5f else -5f
+        pelotaVelY = if (Math.random() > 0.5) 5f else -5f
+    }
+
+    fun moverPaletaJugador(x: Float) {
+        paletaJugadorX = x - paletaAncho / 2
+        // Mantener dentro de los límites
+        if (paletaJugadorX < 0) paletaJugadorX = 0f
+        if (paletaJugadorX + paletaAncho > anchoPantalla) paletaJugadorX = anchoPantalla - paletaAncho
+    }
+
+    fun reiniciarJuego() {
+        puntajeJugador = 0
+        puntajeIA = 0
+        juegoActivo = true
+        reiniciarPelota()
+    }
 }

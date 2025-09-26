@@ -1,4 +1,4 @@
-package com.example.pong
+package com.example.proyecto_final
 
 import kotlin.math.abs
 
@@ -17,16 +17,16 @@ class GestorColisiones_p(
         val tiempoActual = System.currentTimeMillis()
 
         // Rebotes en bordes laterales - MÁS RESPONSIVO
-        if (logica.ballX - logica.ballRadius < 0) {
+        if (logica.pelotaX - logica.pelotaRadio < 0) {
             if (tiempoActual - ultimoRebotePared > tiempoMinimoEntreRebotesPared) {
                 gestorVelocidad.invertirVelocidadX()
-                logica.ballX = logica.ballRadius + 5f // Mayor margen
+                logica.pelotaX = logica.pelotaRadio + 5f
                 ultimoRebotePared = tiempoActual
             }
-        } else if (logica.ballX + logica.ballRadius > logica.canvasWidth) {
+        } else if (logica.pelotaX + logica.pelotaRadio > logica.anchoPantalla) {
             if (tiempoActual - ultimoRebotePared > tiempoMinimoEntreRebotesPared) {
                 gestorVelocidad.invertirVelocidadX()
-                logica.ballX = logica.canvasWidth - logica.ballRadius - 5f
+                logica.pelotaX = logica.anchoPantalla - logica.pelotaRadio - 5f
                 ultimoRebotePared = tiempoActual
             }
         }
@@ -35,9 +35,9 @@ class GestorColisiones_p(
     fun manejarColisiones() {
         val tiempoActual = System.currentTimeMillis()
 
-        // Colisión con paleta del enemigo (arriba) - CORREGIDO
-        if (logica.ballY - logica.ballRadius < logica.enemyPaddleHeight &&
-            logica.ballX >= logica.enemyPaddleX - 10 && logica.ballX <= logica.enemyPaddleX + logica.enemyPaddleWidth + 10) {
+        // Colisión con paleta de la IA (arriba)
+        if (logica.pelotaY - logica.pelotaRadio < logica.paletaIAY + logica.paletaAlto &&
+            logica.pelotaX >= logica.paletaIAX - 10 && logica.pelotaX <= logica.paletaIAX + logica.paletaAncho + 10) {
 
             if (tiempoActual - ultimoReboteEnemigo > tiempoMinimoEntreRebotes) {
                 rebotesConsecutivos = 0
@@ -49,22 +49,21 @@ class GestorColisiones_p(
                 // Asegurar dirección correcta (hacia abajo)
                 gestorVelocidad.setVelocidadAbsolutaY(abs(gestorVelocidad.getVelocidadY()))
 
-                // Posicionar la pelota debajo del enemigo
-                logica.ballY = logica.enemyPaddleHeight + logica.ballRadius + 5f
+                // Posicionar la pelota debajo de la paleta IA
+                logica.pelotaY = logica.paletaIAY + logica.paletaAlto + logica.pelotaRadio + 5f
 
                 // Cambio de velocidad más notable
                 gestorVelocidad.cambiarVelocidadAleatoria()
 
-                logica.bounceCount++
-                logica.ajustarDificultad()
+                logica.puntajeJugador++
 
                 // DEBUG: Mostrar en consola
-                println("REBOTE ENEMIGO - Velocidad: ${gestorVelocidad.getVelocidadRelativa()}")
+                println("REBOTE IA - Velocidad: ${gestorVelocidad.getVelocidadRelativa()}")
             }
         }
 
-        // "Muro" detrás del enemigo - CORREGIDO
-        if (logica.ballY - logica.ballRadius < 0) {
+        // "Muro" detrás de la IA - CORREGIDO
+        if (logica.pelotaY - logica.pelotaRadio < 0) {
             if (tiempoActual - ultimoReboteEnemigo > tiempoMinimoEntreRebotes) {
 
                 // REBOTE ALEATORIO desde el muro
@@ -74,13 +73,11 @@ class GestorColisiones_p(
                 gestorVelocidad.setVelocidadAbsolutaY(abs(gestorVelocidad.getVelocidadY()))
 
                 // Posicionar la pelota debajo del muro
-                logica.ballY = logica.ballRadius + 5f
+                logica.pelotaY = logica.pelotaRadio + 5f
 
                 // +3 PUNTOS y aumento de velocidad
-                logica.score += 3
+                logica.puntajeJugador += 3
                 gestorVelocidad.cambiarVelocidadAleatoria()
-                logica.bounceCount++
-                logica.ajustarDificultad()
                 rebotesConsecutivos = 0
 
                 // DEBUG
@@ -89,29 +86,27 @@ class GestorColisiones_p(
         }
 
         // Colisión con paleta del jugador (abajo) - MEJORADO
-        if (logica.ballY + logica.ballRadius > logica.canvasHeight - logica.paddleHeight &&
-            logica.ballX >= logica.paddleX - 10 && logica.ballX <= logica.paddleX + logica.paddleWidth + 10) {
+        if (logica.pelotaY + logica.pelotaRadio > logica.paletaJugadorY &&
+            logica.pelotaX >= logica.paletaJugadorX - 10 && logica.pelotaX <= logica.paletaJugadorX + logica.paletaAncho + 10) {
 
             // Rebote controlado para el jugador
             gestorVelocidad.invertirVelocidadY()
             gestorVelocidad.setVelocidadAbsolutaY(-abs(gestorVelocidad.getVelocidadY()))
 
             // Asegurar posición
-            if (logica.ballY > logica.canvasHeight - logica.paddleHeight - logica.ballRadius) {
-                logica.ballY = logica.canvasHeight - logica.paddleHeight - logica.ballRadius - 5f
+            if (logica.pelotaY > logica.paletaJugadorY - logica.pelotaRadio) {
+                logica.pelotaY = logica.paletaJugadorY - logica.pelotaRadio - 5f
             }
 
             // Aumento de velocidad más significativo
             gestorVelocidad.cambiarVelocidadAleatoria()
             gestorVelocidad.asegurarVelocidadMinimaBase()
 
-            logica.score++
-            logica.bounceCount++
-            logica.ajustarDificultad()
+            logica.puntajeJugador++
             rebotesConsecutivos = 0
 
             // DEBUG
-            println("REBOTE JUGADOR - Puntos: ${logica.score} - Velocidad: ${gestorVelocidad.getVelocidadRelativa()}")
+            println("REBOTE JUGADOR - Puntos: ${logica.puntajeJugador} - Velocidad: ${gestorVelocidad.getVelocidadRelativa()}")
         }
     }
 

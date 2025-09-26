@@ -1,4 +1,4 @@
-package com.example.pong
+package com.example.proyecto_final
 
 import android.content.Context
 import android.util.AttributeSet

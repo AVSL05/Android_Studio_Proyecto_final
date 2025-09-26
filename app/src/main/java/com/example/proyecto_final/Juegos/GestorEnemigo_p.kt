@@ -1,4 +1,4 @@
-package com.example.pong
+package com.example.proyecto_final
 
 import kotlin.math.abs
 
@@ -17,7 +17,7 @@ class GestorEnemigo_p(private val logica: LogicaJuego_p) {
         // Mantener dentro de límites
         if (logica.enemyPaddleX < 0) logica.enemyPaddleX = 0f
         if (logica.enemyPaddleX > logica.canvasWidth - logica.enemyPaddleWidth) {
-            logica.enemyPaddleX = (logica.canvasWidth - logica.enemyPaddleWidth).toFloat()
+            logica.enemyPaddleX = (logica.canvasWidth - logica.enemyPaddleWidth)
         }
     }
 }

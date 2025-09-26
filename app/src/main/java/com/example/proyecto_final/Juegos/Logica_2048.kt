@@ -1,6 +1,6 @@
-package com.example.a2048
+package com.example.proyecto_final
 
-class Logica(private val tamano: Int) {
+class Logica_2048(private val tamano: Int) {
     private var tablero = Array(tamano) { IntArray(tamano) }
     private var movimientos = 0
     private var juegoActivo = true

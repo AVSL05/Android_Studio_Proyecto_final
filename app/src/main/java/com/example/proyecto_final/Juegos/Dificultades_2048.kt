@@ -1,4 +1,4 @@
-package com.example.a2048
+package com.example.proyecto_final
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

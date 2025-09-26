@@ -63,9 +63,11 @@ class MainActivity : AppCompatActivity() {
         val btnPlayBuscaMinas = findViewById<Button>(R.id.btnPlayBuscaMinas)
         val btnPlayTetris = findViewById<Button>(R.id.btnPlayTetris)
         val btnPlayBreakout = findViewById<Button>(R.id.btnPlayBreakout) // NUEVO: botón Breakout
+        val btnPlay2048 = findViewById<Button>(R.id.btnPlay2048) // NUEVO: botón 2048
+        val btnPlayPong = findViewById<Button>(R.id.btnPlayPong) // NUEVO: botón Pong
 
-        // Referencias a todos los botones de jugar (sin incluir todavía Breakout en listeners previos)
-        val btnsJugar = listOf(btnPlaySnake, btnPlayMemorama, btnPlaySudoku, btnPlayBuscaMinas, btnPlayTetris, btnPlayBreakout)
+        // Referencias a todos los botones de jugar (incluyendo los nuevos juegos)
+        val btnsJugar = listOf(btnPlaySnake, btnPlayMemorama, btnPlaySudoku, btnPlayBuscaMinas, btnPlayTetris, btnPlayBreakout, btnPlay2048, btnPlayPong)
 
         imageSnake.setOnClickListener {
             if (btnPlaySnake.visibility == View.VISIBLE) {
@@ -176,6 +178,44 @@ class MainActivity : AppCompatActivity() {
         btnPlayBreakout.setOnClickListener {
             // Lanzar Activity de Breakout
             startActivity(Intent(this, BreakoutActivity::class.java))
+        }
+
+        // NUEVO: Wiring para 2048 (imagen + botón)
+        val image2048 = findViewById<ImageView>(R.id.image2048)
+        val uri2048 = Uri.parse("android.resource://" + packageName + "/raw/2048")
+        Glide.with(this).asGif().load(uri2048).into(image2048)
+
+        image2048.setOnClickListener {
+            if (btnPlay2048.visibility == View.VISIBLE) {
+                btnPlay2048.visibility = View.GONE
+            } else {
+                btnsJugar.forEach { it.visibility = View.GONE }
+                btnPlay2048.visibility = View.VISIBLE
+            }
+        }
+        btnPlay2048.setOnClickListener {
+            // Lanzar Activity de selección de dificultades para 2048
+            val intent = Intent(this, Dificultades_2048::class.java)
+            startActivity(intent)
+        }
+
+        // NUEVO: Wiring para Pong (imagen + botón)
+        val imagePong = findViewById<ImageView>(R.id.imagePong)
+        val pongUri = Uri.parse("android.resource://" + packageName + "/raw/pong")
+        Glide.with(this).asGif().load(pongUri).into(imagePong)
+
+        imagePong.setOnClickListener {
+            if (btnPlayPong.visibility == View.VISIBLE) {
+                btnPlayPong.visibility = View.GONE
+            } else {
+                btnsJugar.forEach { it.visibility = View.GONE }
+                btnPlayPong.visibility = View.VISIBLE
+            }
+        }
+        btnPlayPong.setOnClickListener {
+            // Lanzar Activity de Pong
+            val intent = Intent(this, PongActivity::class.java)
+            startActivity(intent)
         }
 
         // Preferencias para modo oscuro

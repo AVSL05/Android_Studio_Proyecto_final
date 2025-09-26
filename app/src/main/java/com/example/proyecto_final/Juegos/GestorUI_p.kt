@@ -1,4 +1,4 @@
-package com.example.pong
+package com.example.proyecto_final
 
 import android.content.SharedPreferences
 import android.view.MotionEvent

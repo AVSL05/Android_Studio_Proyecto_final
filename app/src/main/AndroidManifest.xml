@@ -49,9 +49,21 @@
             android:name=".Juegos.TetrisActivity"
             android:exported="false" />
 
-        <!-- Activity del juego Breakout (pelota y ladrillos) -->
         <activity
             android:name=".Juegos.BreakoutActivity"
+            android:exported="false" />
+
+        <!-- NUEVAS ACTIVITIES para 2048 y Pong -->
+        <activity
+            android:name=".Dificultades_2048"
+            android:exported="false" />
+
+        <activity
+            android:name=".Tablero_2048"
+            android:exported="false" />
+
+        <activity
+            android:name=".PongActivity"
             android:exported="false" />
 
     </application>
