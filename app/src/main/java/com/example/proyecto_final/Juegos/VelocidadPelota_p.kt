@@ -1,4 +1,4 @@
-package com.example.pong
+package com.example.proyecto_final.Juegos
 
 import kotlin.random.Random
 import kotlin.math.abs

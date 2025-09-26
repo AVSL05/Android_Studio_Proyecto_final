@@ -1,4 +1,4 @@
-package com.example.a2048
+package com.example.proyecto_final.Juegos
 
 class Logica(private val tamano: Int) {
     private var tablero = Array(tamano) { IntArray(tamano) }

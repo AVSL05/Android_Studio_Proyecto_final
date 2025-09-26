@@ -1,4 +1,4 @@
-package com.example.a2048
+package com.example.proyecto_final.Juegos
 
 import android.content.Context
 import android.content.SharedPreferences

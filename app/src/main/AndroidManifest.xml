@@ -54,6 +54,21 @@
             android:name=".Juegos.BreakoutActivity"
             android:exported="false" />
 
+        <!-- Activity del juego PONG -->
+        <activity
+            android:name=".Juegos.PongActivity"
+            android:exported="false" />
+
+        <!-- Activity de selección de dificultad para 2048 -->
+        <activity
+            android:name=".Juegos.Dificultades_2048"
+            android:exported="false" />
+
+        <!-- Activity del tablero de 2048 -->
+        <activity
+            android:name=".Juegos.Tablero_2048"
+            android:exported="false" />
+
     </application>
 
 </manifest>

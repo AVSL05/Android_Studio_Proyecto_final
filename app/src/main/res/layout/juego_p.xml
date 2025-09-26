@@ -20,8 +20,7 @@
             app:srcCompat="@drawable/fondo_p"
             tools:srcCompat="@drawable/fondo_p" />
 
-        <!-- Vista del juego -->
-        <com.example.pong.PongView
+        <com.example.proyecto_final.Juegos.PongView
             android:id="@+id/pongView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

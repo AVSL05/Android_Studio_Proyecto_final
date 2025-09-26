@@ -1,10 +1,11 @@
-package com.example.a2048
+package com.example.proyecto_final.Juegos
 
 import android.app.AlertDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.example.proyecto_final.R
 
 class Tablero_2048 : AppCompatActivity() {
     private lateinit var logica: Logica
@@ -192,7 +193,4 @@ class Tablero_2048 : AppCompatActivity() {
         actualizarTablero()
     }
 
-    override fun onBackPressed() {
-        mostrarDialogoSalir()
-    }
 }

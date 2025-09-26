@@ -23,6 +23,9 @@ import android.widget.Toast
 import com.example.proyecto_final.Juegos.TetrisActivity // Import de la Activity de Tetris
 import com.example.proyecto_final.Juegos.BreakoutActivity // NUEVO: import de Breakout
 import androidx.appcompat.widget.SwitchCompat
+//juegos 2048 y pong
+import com.example.proyecto_final.Juegos.PongActivity
+import com.example.proyecto_final.Juegos.Dificultades_2048
 
 // Actividad principal que muestra información del usuario y permite cerrar sesión
 
@@ -63,9 +66,56 @@ class MainActivity : AppCompatActivity() {
         val btnPlayBuscaMinas = findViewById<Button>(R.id.btnPlayBuscaMinas)
         val btnPlayTetris = findViewById<Button>(R.id.btnPlayTetris)
         val btnPlayBreakout = findViewById<Button>(R.id.btnPlayBreakout) // NUEVO: botón Breakout
+        val btnPlayPong = findViewById<Button>(R.id.btnPlayPong)
+        val btnPlay2048 = findViewById<Button>(R.id.btnPlay2048)
 
-        // Referencias a todos los botones de jugar (sin incluir todavía Breakout en listeners previos)
-        val btnsJugar = listOf(btnPlaySnake, btnPlayMemorama, btnPlaySudoku, btnPlayBuscaMinas, btnPlayTetris, btnPlayBreakout)
+// Referencias a todos los botones de jugar
+        val btnsJugar = listOf(btnPlaySnake, btnPlayMemorama, btnPlaySudoku, btnPlayBuscaMinas, btnPlayTetris, btnPlayBreakout, btnPlayPong, btnPlay2048)
+
+// --------- Integración de PONG (imagen + botón) ---------
+        val imagePong = findViewById<ImageView>(R.id.imagePong)
+// Cargar GIF de PONG
+        val pongUri = Uri.parse("android.resource://" + packageName + "/raw/pong")
+        Glide.with(this).asGif().load(pongUri).into(imagePong)
+
+        imagePong.setOnClickListener {
+            if (btnPlayPong.visibility == View.VISIBLE) {
+                btnPlayPong.visibility = View.GONE
+            } else {
+                // Ocultar todos los demás botones primero
+                btnsJugar.forEach {
+                    it.visibility = View.GONE
+                }
+                btnPlayPong.visibility = View.VISIBLE
+            }
+        }
+        btnPlayPong.setOnClickListener {
+            val intent = Intent(this, PongActivity::class.java)
+            startActivity(intent)
+        }
+
+// --------- Integración de 2048 (imagen + botón) ---------
+        val image2048 = findViewById<ImageView>(R.id.image2048)
+
+// Cargar GIF de 2048 (ahora con nombre g2048)
+        val uri2048 = Uri.parse("android.resource://" + packageName + "/raw/g2048")
+        Glide.with(this).asGif().load(uri2048).into(image2048)
+
+        image2048.setOnClickListener {
+            if (btnPlay2048.visibility == View.VISIBLE) {
+                btnPlay2048.visibility = View.GONE
+            } else {
+                // Ocultar todos los demás botones primero
+                btnsJugar.forEach {
+                    it.visibility = View.GONE
+                }
+                btnPlay2048.visibility = View.VISIBLE
+            }
+        }
+        btnPlay2048.setOnClickListener {
+            val intent = Intent(this, Dificultades_2048::class.java)
+            startActivity(intent)
+        }
 
         imageSnake.setOnClickListener {
             if (btnPlaySnake.visibility == View.VISIBLE) {

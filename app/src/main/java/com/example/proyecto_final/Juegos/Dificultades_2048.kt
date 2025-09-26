@@ -1,9 +1,10 @@
-package com.example.a2048
+package com.example.proyecto_final.Juegos
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import com.example.proyecto_final.R
 
 class Dificultades_2048 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
