@@ -6,11 +6,6 @@ class Dibujador_p {
     private val paint = Paint()
     private lateinit var background: Bitmap
 
-    // Control para mostrar mensaje de +3 puntos
-    private var mostrarBonusPuntos = false
-    private var tiempoBonusInicio = 0L
-    private val duracionBonus = 1000L // 1 segundo
-
     fun dibujar(canvas: Canvas, logica: LogicaJuego_p) {
         // Dibujar fondo
         if (!::background.isInitialized || background.width != canvas.width || background.height != canvas.height) {
@@ -24,67 +19,27 @@ class Dibujador_p {
         dibujarLineaCentral(canvas, logica)
         dibujarUI(canvas, logica)
 
-        // Dibujar mensaje de bonus si corresponde
-        dibujarMensajeBonus(canvas, logica)
-
         if (logica.gameOver) {
             dibujarGameOver(canvas, logica)
         }
     }
 
-    // NUEVO MÉTODO: Para activar el mensaje de +3 puntos
-    fun activarBonusPuntos() {
-        mostrarBonusPuntos = true
-        tiempoBonusInicio = System.currentTimeMillis()
-    }
-
-    private fun dibujarMensajeBonus(canvas: Canvas, logica: LogicaJuego_p) {
-        if (mostrarBonusPuntos) {
-            val tiempoActual = System.currentTimeMillis()
-            if (tiempoActual - tiempoBonusInicio < duracionBonus) {
-                // Calcular opacidad (fade out)
-                val progreso = (tiempoActual - tiempoBonusInicio).toFloat() / duracionBonus.toFloat()
-                val alpha = (255 * (1 - progreso)).toInt()
-
-                paint.color = Color.argb(alpha, 0, 255, 0) // Verde que se desvanece
-                paint.textSize = 60f
-                paint.textAlign = Paint.Align.CENTER
-                paint.style = Paint.Style.FILL
-
-                canvas.drawText("+3 PUNTOS!", logica.canvasWidth / 2f, logica.canvasHeight / 3f, paint)
-            } else {
-                mostrarBonusPuntos = false
-            }
-        }
-    }
-
     private fun crearFondo(width: Int, height: Int) {
-        try {
-            background = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-            val bgCanvas = Canvas(background)
-            bgCanvas.drawColor(Color.BLACK)
-        } catch (e: Exception) {
-            background = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-            val bgCanvas = Canvas(background)
-            bgCanvas.drawColor(Color.BLACK)
-        }
+        background = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val bgCanvas = Canvas(background)
+        bgCanvas.drawColor(Color.BLACK)
     }
 
     private fun dibujarPaletas(canvas: Canvas, logica: LogicaJuego_p) {
         // Paleta del jugador (abajo)
         paint.color = Color.BLUE
-        canvas.drawRect(logica.paddleX, (logica.canvasHeight - logica.paddleHeight).toFloat(),
-            logica.paddleX + logica.paddleWidth, logica.canvasHeight.toFloat(), paint)
+        canvas.drawRect(logica.paddleX, logica.paletaJugadorY,
+            logica.paddleX + logica.paddleWidth, logica.paletaJugadorY + logica.paddleHeight, paint)
 
         // Paleta del enemigo (arriba)
         paint.color = Color.RED
-        canvas.drawRect(logica.enemyPaddleX, 0f,
-            logica.enemyPaddleX + logica.enemyPaddleWidth, logica.enemyPaddleHeight.toFloat(), paint)
-
-        // "Muro" detrás del enemigo
-        paint.color = Color.RED
-        paint.strokeWidth = 5f
-        canvas.drawLine(0f, 0f, logica.canvasWidth.toFloat(), 0f, paint)
+        canvas.drawRect(logica.enemyPaddleX, logica.paletaIAY,
+            logica.enemyPaddleX + logica.enemyPaddleWidth, logica.paletaIAY + logica.enemyPaddleHeight, paint)
     }
 
     private fun dibujarPelota(canvas: Canvas, logica: LogicaJuego_p) {
@@ -132,11 +87,6 @@ class Dibujador_p {
         canvas.drawText("Mejor: ${logica.highScore}", logica.canvasWidth / 2f, logica.canvasHeight / 3f + 130, paint)
         canvas.drawText("Rebotes: ${logica.bounceCount}", logica.canvasWidth / 2f, logica.canvasHeight / 3f + 180, paint)
 
-        // Botones
-        dibujarBotonesGameOver(canvas, logica)
-    }
-
-    private fun dibujarBotonesGameOver(canvas: Canvas, logica: LogicaJuego_p) {
         // Botón "Jugar de nuevo"
         paint.color = Color.GREEN
         canvas.drawRect(logica.canvasWidth * 0.2f, logica.canvasHeight * 0.6f,
@@ -144,12 +94,5 @@ class Dibujador_p {
         paint.color = Color.BLACK
         paint.textSize = 35f
         canvas.drawText("Jugar de Nuevo", logica.canvasWidth / 2f, logica.canvasHeight * 0.65f, paint)
-
-        // Botón "Salir"
-        paint.color = Color.RED
-        canvas.drawRect(logica.canvasWidth * 0.2f, logica.canvasHeight * 0.75f,
-            logica.canvasWidth * 0.8f, logica.canvasHeight * 0.85f, paint)
-        paint.color = Color.WHITE
-        canvas.drawText("Salir del Juego", logica.canvasWidth / 2f, logica.canvasHeight * 0.8f, paint)
     }
 }

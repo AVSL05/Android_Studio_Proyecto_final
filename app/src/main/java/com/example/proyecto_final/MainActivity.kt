@@ -8,7 +8,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
@@ -19,12 +18,11 @@ import com.example.proyecto_final.Juegos.MemoramaActivity
 import com.example.proyecto_final.Juegos.Snake
 import com.example.proyecto_final.Juegos.SudokuActivity
 import com.example.proyecto_final.utils.SessionManager
-import android.widget.Toast
 import com.example.proyecto_final.Juegos.TetrisActivity // Import de la Activity de Tetris
 import com.example.proyecto_final.Juegos.BreakoutActivity // NUEVO: import de Breakout
 import androidx.appcompat.widget.SwitchCompat
 //juegos 2048 y pong
-import com.example.proyecto_final.Juegos.PongActivity
+import com.example.proyecto_final.Juegos.PongN
 import com.example.proyecto_final.Juegos.Dificultades_2048
 
 // Actividad principal que muestra información del usuario y permite cerrar sesión
@@ -90,7 +88,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         btnPlayPong.setOnClickListener {
-            val intent = Intent(this, PongActivity::class.java)
+            val intent = Intent(this, PongN::class.java)
             startActivity(intent)
         }
 

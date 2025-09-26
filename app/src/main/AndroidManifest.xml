@@ -56,7 +56,7 @@
 
         <!-- Activity del juego PONG -->
         <activity
-            android:name=".Juegos.PongActivity"
+            android:name=".Juegos.PongN"
             android:exported="false" />
 
         <!-- Activity de selección de dificultad para 2048 -->
