@@ -22,8 +22,8 @@ import com.example.proyecto_final.Juegos.TetrisActivity // Import de la Activity
 import com.example.proyecto_final.Juegos.BreakoutActivity // NUEVO: import de Breakout
 import androidx.appcompat.widget.SwitchCompat
 //juegos 2048 y pong
-import com.example.proyecto_final.Juegos.PongN
 import com.example.proyecto_final.Juegos.Dificultades_2048
+import com.example.proyecto_final.Juegos.PongN
 
 // Actividad principal que muestra información del usuario y permite cerrar sesión
 

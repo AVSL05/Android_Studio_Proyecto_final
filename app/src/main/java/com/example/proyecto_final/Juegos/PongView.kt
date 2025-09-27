@@ -8,10 +8,10 @@ import android.view.MotionEvent
 
 class PongView(context: Context, attrs: AttributeSet?) : SurfaceView(context, attrs), SurfaceHolder.Callback {
 
-    private lateinit var gameThread: GameThread
-    private val logicaJuego = LogicaJuego_p(context)
-    private val dibujador = Dibujador_p()
-    private val controladorToque = ControladorToque_p()
+    private lateinit var gameThread: GameThread_p
+    private val logicaJuego_p = LogicaJuego_p(context)
+    private val dibujador_p = Dibujador_p()
+    private val controladorToque_p = ControladorToque_p()
 
     init {
         holder.addCallback(this)
@@ -19,58 +19,53 @@ class PongView(context: Context, attrs: AttributeSet?) : SurfaceView(context, at
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) {
-        logicaJuego.inicializar(width, height)
-        gameThread = GameThread(holder)
+        logicaJuego_p.inicializar(width, height)
+        gameThread = GameThread_p(holder)
         gameThread.start()
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-        logicaJuego.configurarDimensiones(width, height)
+        logicaJuego_p.configurarDimensiones(width, height)
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
-        gameThread.detener()
+        var retry = true
+        gameThread.running = false
+        while (retry) {
+            try {
+                gameThread.join()
+                retry = false
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+            }
+        }
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        return controladorToque.manejarToque(event, logicaJuego, context)
+        return controladorToque_p.manejarToque(event, logicaJuego_p, context)
     }
 
-    private inner class GameThread(private val holder: SurfaceHolder) : Thread() {
-        private var running = true
+    private inner class GameThread_p(private val holder: SurfaceHolder) : Thread() {
+        var running = true
 
         override fun run() {
             while (running) {
-                // Actualizar lógica del juego
-                logicaJuego.actualizar()
+                logicaJuego_p.actualizar()
 
-                // Dibujar en el canvas
                 val canvas = holder.lockCanvas()
                 if (canvas != null) {
                     try {
-                        synchronized(holder) {
-                            dibujador.dibujar(canvas, logicaJuego)
-                        }
+                        dibujador_p.dibujar(canvas, logicaJuego_p)
                     } finally {
                         holder.unlockCanvasAndPost(canvas)
                     }
                 }
 
-                // Control de FPS (aproximadamente 60 FPS)
                 try {
                     sleep(16)
                 } catch (e: InterruptedException) {
                     e.printStackTrace()
                 }
-            }
-        }
-
-        fun detener() {
-            running = false
-            try {
-                join()
-            } catch (e: InterruptedException) {
-                e.printStackTrace()
             }
         }
     }
