@@ -11,6 +11,7 @@ class PongView(context: Context, attrs: AttributeSet?) : SurfaceView(context, at
     private lateinit var gameThread: GameThread_p
     private val logicaJuego_p = LogicaJuego_p(context)
     private val dibujador_p = Dibujador_p()
+
     private val controladorToque_p = ControladorToque_p()
 
     init {
